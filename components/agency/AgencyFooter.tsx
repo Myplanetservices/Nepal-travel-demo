@@ -361,6 +361,11 @@ export function AgencyFooter() {
                   Permit Windows &amp; Visas
                 </Link>
               </li>
+              <li>
+                <Link href="/day-tours" className="hover:text-white hover:translate-x-0.5 transition-all block truncate">
+                  Scenic Day Tours &amp; Ballooning
+                </Link>
+              </li>
             </ul>
           </div>
 

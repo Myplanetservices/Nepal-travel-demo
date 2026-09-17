@@ -58,7 +58,6 @@ import { MainAgencyNav } from "@/components/agency/MainAgencyNav";
 import { HeroSection } from "@/components/landing/HeroSection";
 import { AgencyFooter } from "@/components/agency/AgencyFooter";
 import { InteractiveDestinationGallery } from "@/components/agency/InteractiveDestinationGallery";
-import { HimalayanSunriseBalloonSection } from "@/components/travel/HimalayanSunriseBalloonSection";
 import {
   RetroCameraSticker,
   BoardingTicketsSticker,
@@ -2692,10 +2691,18 @@ export default function Home() {
           ========================================================================= */}
       <InteractiveDestinationGallery />
 
-      {/* =========================================================================
-          SECTION 15: BESPOKE HIMALAYAN SUNRISE AERIAL EXPEDITIONS
-          ========================================================================= */}
-      <HimalayanSunriseBalloonSection />
+      {/* Low-prominence link to day tours / aerial experiences */}
+      <div className="py-6 bg-[#F5F3EF] border-t border-stone-200/60 text-center">
+        <p className="text-xs text-stone-600">
+          Looking for leisurely valley excursions or aerial flights? View our{" "}
+          <Link
+            href="/day-tours"
+            className="text-[#2D4A34] font-bold underline hover:text-[#7FA05C] transition-colors"
+          >
+            Scenic Day Tours &amp; Himalayan Ballooning Experiences →
+          </Link>
+        </p>
+      </div>
 
       {/* =========================================================================
           SECTION 16: BESPOKE ITINERARY CTA STRIP (Access Nepal Tour Style)

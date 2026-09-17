@@ -1,0 +1,80 @@
+.globe-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background: #000;
+  overflow: hidden;
+}
+
+/* Marker pin + pulse animation */
+.globe-marker-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.globe-pin {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #ff5533;
+  box-shadow: 0 0 0 0 rgba(255, 85, 51, 0.7);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 85, 51, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(255, 85, 51, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 85, 51, 0);
+  }
+}
+
+/* Tooltip, hidden until hover */
+.globe-tooltip {
+  position: absolute;
+  top: -28px;
+  padding: 4px 10px;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 12px;
+  white-space: nowrap;
+  border-radius: 4px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.globe-marker-container:hover .globe-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Fade overlay shown during the zoom-in before redirect */
+.globe-fade-overlay {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: 0;
+  animation: fadeToBlack 1.6s forwards;
+  pointer-events: none;
+}
+
+@keyframes fadeToBlack {
+  0% {
+    opacity: 0;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

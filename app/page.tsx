@@ -27,10 +27,8 @@ import {
   Ticket,
   Sparkles,
   Tag,
-  PhoneCall,
-  Play,
   Check,
-  Copy,
+  PhoneCall,
   Utensils,
   Coffee,
   Car,
@@ -337,48 +335,42 @@ const ROUTE_SPECIFIC_PRICING: RouteSpecificPricing[] = [
   },
 ];
 
-// Special Offers (Tactile Dual-Chamber Himalayan Expedition Vouchers)
-const SPECIAL_OFFERS = [
+// Expedition Value Incentives (Replaces mass-market coupon cards with premium value incentives)
+const EXPEDITION_INCENTIVES = [
   {
-    id: "offer-1",
-    discount: "15% OFF",
-    tag: "Early Bird 2026",
-    title: "Autumn 2026 Early Bird Everest Departures",
-    description: "Lock peak-season Sagarmatha permits 6 months in advance with priority teahouse rooms and Sherpa team gear check.",
-    code: "AUTUMN15",
-    link: "/tour/everest-base-camp-trek",
+    id: "incentive-1",
+    tag: "Khumbu / Sagarmatha",
+    headline: "[Incentive headline — pending business input: e.g. Early Booking Logistics Advantage]",
+    description: "[Incentive description — pending business input: e.g. Priority teahouse room reservations and Sherpa equipment inspection]",
+    perk: "[Perk specification — pending business input: e.g. Locked teahouse permits & Sherpa gear check]",
     region: "Khumbu Valley, Nepal",
     altitude: "5,364m",
-    validity: "Departures: Sep – Nov 2026",
-    perk: "Locked Teahouse Permits & Free Gear Check",
+    validityPlaceholder: "[Departure window — pending business input: e.g. Autumn 2026 Departures]",
+    link: "/tour/everest-base-camp-trek",
     image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    id: "offer-2",
-    discount: "25% OFF",
-    tag: "Group Adventure",
-    title: "Group Booking Discount (4+ Trekkers)",
-    description: "Assemble family or trail companions for Thorong La Pass. Includes dedicated Sherpa expedition leads and reduced porter ratios.",
-    code: "GROUP25",
-    link: "/tour/annapurna-circuit-trek",
+    id: "incentive-2",
+    tag: "Annapurna Sanctuary",
+    headline: "[Incentive headline — pending business input: e.g. Small-Party Expedition Team Allocation]",
+    description: "[Incentive description — pending business input: e.g. Dedicated Sherpa leadership support and reduced porter ratio for private groups]",
+    perk: "[Perk specification — pending business input: e.g. Dedicated private guide-to-climber ratio]",
     region: "Annapurna Sanctuary, Nepal",
     altitude: "5,416m",
-    validity: "Parties of 4+ Trekkers",
-    perk: "Dedicated Lead Sherpa & Private Group Porter",
+    validityPlaceholder: "[Group qualification — pending business input: e.g. Parties of 4+ Climbers]",
+    link: "/tour/annapurna-circuit-trek",
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=1200&auto=format&fit=crop",
   },
   {
-    id: "offer-3",
-    discount: "35% OFF",
-    tag: "Cultural Sanctuary",
-    title: "Off-Season Cultural Circuits & Valley Treks",
-    description: "Experience Bhutan's cliff-hanging dzongs and Tiger's Nest monastery with complimentary visa processing and boutique heritage lodging.",
-    code: "CULTURE35",
-    link: "/tour/bhutan-cultural-tour",
+    id: "incentive-3",
+    tag: "Trans-Himalayan Circuit",
+    headline: "[Incentive headline — pending business input: e.g. High Plateau Cultural Route Inclusions]",
+    description: "[Incentive description — pending business input: e.g. Complete regulatory permit filing and boutique heritage lodging inclusions]",
+    perk: "[Perk specification — pending business input: e.g. Heritage lodging & permit coordination]",
     region: "Paro & Thimphu, Bhutan",
     altitude: "3,120m",
-    validity: "Valid across all 2026 departures",
-    perk: "Govt SDF Tax Waiver & Heritage Boutique Inns",
+    validityPlaceholder: "[Season window — pending business input: e.g. 2026 Cultural Departures]",
+    link: "/tour/bhutan-cultural-tour",
     image: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?q=80&w=1200&auto=format&fit=crop",
   },
 ];
@@ -458,16 +450,6 @@ export default function Home() {
 
   // Video modal state
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-
-  // Special Offers promo code copy feedback state
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const handleCopyCode = (code: string) => {
-    if (typeof navigator !== "undefined" && navigator.clipboard) {
-      navigator.clipboard.writeText(code);
-      setCopiedCode(code);
-      setTimeout(() => setCopiedCode(null), 2500);
-    }
-  };
 
   // Filtered packages with search parameter matching
   const filteredPackages = useMemo(() => {
@@ -2150,133 +2132,90 @@ export default function Home() {
                 />
               </div>
               <span className="text-[11px] sm:text-xs uppercase tracking-widest font-bold text-[#7FA05C]">
-                Exclusive Expedition Offers
+                Expedition Value Incentives
               </span>
             </div>
             <h2 className="font-heading font-extrabold text-3xl sm:text-4xl text-[#2D4A34] tracking-tight">
-              Offers To Inspire You
+              Value Incentives &amp; Inclusions
             </h2>
             <p className="text-sm text-[#7C8A96] mt-2.5 font-sans leading-relaxed">
-              Locked teahouse allocations, guaranteed departure slots, and direct Sherpa team rates for the 2026–2027 seasons.
+              Logistics advantages, seasonal gear support, and group team allocations for the 2026–2027 seasons.
             </p>
           </div>
 
+          {/* Clean Value-Incentive Cards Layout (No coupons / no codes) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {SPECIAL_OFFERS.map((offer) => (
+            {EXPEDITION_INCENTIVES.map((incentive) => (
               <div
-                key={offer.id}
-                className="bg-white rounded-3xl border border-stone-200/90 shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-1.5 flex flex-col overflow-hidden group"
+                key={incentive.id}
+                className="bg-white rounded-3xl border border-stone-200/90 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden group"
               >
-                {/* Chamber 1: Scenic Alpine Destination Visual Window */}
-                <div className="h-64 sm:h-72 relative overflow-hidden bg-stone-900">
+                {/* Visual Window */}
+                <div className="h-56 relative overflow-hidden bg-stone-900">
                   <Image
-                    src={offer.image}
-                    alt={offer.title}
+                    src={incentive.image}
+                    alt={incentive.headline}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 400px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                   />
-                  {/* Atmospheric gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/25" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/10" />
 
-                  {/* Top Bar Badges */}
+                  {/* Badges */}
                   <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-10">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#D9A23B] text-white text-xs font-black tracking-wide shadow-md">
-                      <Tag className="size-3" />
-                      <span>{offer.discount}</span>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2D4A34]/90 backdrop-blur-sm text-white text-[11px] font-bold tracking-wide">
+                      <Sparkles className="size-3 text-[#7FA05C]" />
+                      <span>{incentive.tag}</span>
                     </span>
 
-                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/45 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold shadow-sm">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-md border border-white/20 text-white text-[11px] font-semibold">
                       <Mountain className="size-3 text-[#7FA05C]" />
-                      <span>{offer.altitude}</span>
+                      <span>{incentive.altitude}</span>
                     </span>
                   </div>
 
-                  {/* Bottom Header Info inside Visual Window */}
-                  <div className="absolute bottom-4 left-5 right-5 z-10">
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <span className="text-[10px] font-mono tracking-widest text-amber-300 font-bold uppercase">
-                        {offer.tag}
-                      </span>
-                      <span className="text-white/40 text-xs">•</span>
-                      <span className="text-white/85 text-[11px] font-medium flex items-center gap-1">
-                        <MapPin className="size-2.5 text-amber-300/80" />
-                        {offer.region}
-                      </span>
-                    </div>
-
-                    <h3 className="font-heading font-extrabold text-lg sm:text-xl text-white leading-snug drop-shadow-sm group-hover:text-amber-100 transition-colors">
-                      {offer.title}
-                    </h3>
+                  <div className="absolute bottom-3 left-4 right-4 z-10 flex items-center gap-1.5 text-white/90 text-xs font-medium">
+                    <MapPin className="size-3 text-amber-300" />
+                    <span>{incentive.region}</span>
                   </div>
                 </div>
 
-                {/* Tactile Perforated Ticket Divider with Notches */}
-                <div className="relative flex items-center bg-white h-5 overflow-hidden">
-                  {/* Left Concave Cutout */}
-                  <div className="absolute -left-3 top-1/2 -translate-y-1/2 size-6 rounded-full bg-[#F5F3EF] border-r border-stone-200/90 shadow-inner" />
-                  {/* Perforated Dashed Tear Line */}
-                  <div className="w-full border-t border-dashed border-stone-300 mx-5" />
-                  {/* Right Concave Cutout */}
-                  <div className="absolute -right-3 top-1/2 -translate-y-1/2 size-6 rounded-full bg-[#F5F3EF] border-l border-stone-200/90 shadow-inner" />
-                </div>
-
-                {/* Chamber 2: Voucher Perks & Interactive Redemption Action */}
-                <div className="p-6 pt-2 flex-1 flex flex-col justify-between bg-white">
+                {/* Content Area */}
+                <div className="p-6 flex-1 flex flex-col justify-between bg-white">
                   <div>
-                    <p className="text-xs text-stone-600 leading-relaxed font-sans">
-                      {offer.description}
+                    <h3 className="font-heading font-extrabold text-base text-[#2D4A34] leading-snug group-hover:text-[#1E3324] transition-colors mb-2.5">
+                      {incentive.headline}
+                    </h3>
+                    <p className="text-xs text-stone-600 leading-relaxed font-sans mb-4">
+                      {incentive.description}
                     </p>
 
-                    {/* Included Perk Highlight */}
-                    <div className="mt-3.5 flex items-center gap-2 px-3 py-2 rounded-xl bg-stone-50 border border-stone-200/70">
-                      <CheckCircle2 className="size-3.5 text-[#7FA05C] shrink-0" />
-                      <span className="text-[11px] font-semibold text-[#2D4A34] line-clamp-1">
-                        {offer.perk}
+                    {/* Value Incentive Perk Line */}
+                    <div className="flex items-start gap-2 p-3 rounded-xl bg-[#F5F3EF] border border-[#7C8A96]/15 mb-3">
+                      <CheckCircle2 className="size-3.5 text-[#7FA05C] shrink-0 mt-0.5" />
+                      <span className="text-[11px] font-semibold text-[#2D4A34]">
+                        {incentive.perk}
                       </span>
                     </div>
 
-                    {/* Validity Metadata */}
-                    <div className="mt-2.5 flex items-center gap-1.5 text-[11px] text-stone-400 font-medium">
+                    {/* Pending Terms / Validity Placeholder */}
+                    <div className="flex items-center gap-1.5 text-[11px] text-stone-400 font-medium">
                       <Calendar className="size-3 text-stone-400" />
-                      <span>{offer.validity}</span>
+                      <span className="font-mono text-[10px]">{incentive.validityPlaceholder}</span>
                     </div>
                   </div>
 
-                  {/* Voucher Action Row */}
+                  {/* Clean Action Link */}
                   <div className="mt-6 pt-4 border-t border-stone-100 flex items-center justify-between gap-3">
-                    {/* 1-Click Interactive Copy Code Button */}
-                    <button
-                      type="button"
-                      onClick={() => handleCopyCode(offer.code)}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-stone-50 hover:bg-[#7FA05C]/10 border border-dashed border-stone-300 hover:border-[#7FA05C] transition-all group/code text-left cursor-pointer"
-                      title="Click to copy promo code"
-                    >
-                      <div className="flex flex-col">
-                        <span className="text-[9px] uppercase tracking-wider text-stone-400 font-bold">
-                          Promo Code
-                        </span>
-                        <span className="font-mono text-xs font-black text-[#2D4A34] tracking-wider">
-                          {offer.code}
-                        </span>
-                      </div>
-                      {copiedCode === offer.code ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#2D4A34] bg-[#7FA05C]/25 px-1.5 py-0.5 rounded">
-                          <Check className="size-3 text-[#2D4A34]" />
-                          Copied!
-                        </span>
-                      ) : (
-                        <Copy className="size-3.5 text-stone-400 group-hover/code:text-[#2D4A34] transition-colors" />
-                      )}
-                    </button>
-
-                    {/* Direct Booking / View Tour CTA */}
+                    <span className="text-[10px] text-stone-400 font-mono">
+                      [Perk terms pending client brief]
+                    </span>
                     <Link
-                      href={offer.link}
-                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#2D4A34] hover:bg-[#1E3324] text-white text-xs font-bold shadow-sm hover:shadow-md hover:translate-x-0.5 transition-all group/btn"
+                      href={incentive.link}
+                      className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#2D4A34] hover:bg-[#1E3324] text-white text-xs font-bold shadow-sm transition-all group/btn shrink-0"
                     >
-                      <span>Claim Deal</span>
-                      <ArrowRight className="size-3.5 group-hover/btn:translate-x-1 transition-transform" />
+                      <span>Inquire Route</span>
+                      <ArrowRight className="size-3.5 group-hover/btn:translate-x-0.5 transition-transform" />
                     </Link>
                   </div>
                 </div>
@@ -2297,9 +2236,9 @@ export default function Home() {
                 Zero Rescheduling Fees
               </span>
               <span className="text-stone-300 hidden sm:inline">•</span>
-              <span className="flex items-center gap-1.5">
-                <Tag className="size-4 text-[#3E7C94]" />
-                Instant Checkout Code Redemption
+              <span className="flex items-center gap-1.5 font-semibold text-[#2D4A34]">
+                <CheckCircle2 className="size-4 text-[#7FA05C]" />
+                Direct Agency Route Briefings
               </span>
             </div>
           </div>

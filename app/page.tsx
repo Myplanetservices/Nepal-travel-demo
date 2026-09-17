@@ -370,15 +370,75 @@ const SPECIAL_OFFERS = [
 export default function Home() {
   const { formatPrice } = useCurrency();
 
-  // Floating Reservation Widget state (Tourex)
-  const [activeSearchTab, setActiveSearchTab] = useState<"tour" | "flight" | "hotels">("tour");
+  // Floating Reservation Widget state
   const [searchDestination, setSearchDestination] = useState<string>("Everest");
+  const [searchActivity, setSearchActivity] = useState<string>("All");
   const [searchCheckIn, setSearchCheckIn] = useState<string>("2026-10-15");
-  const [searchCheckOut, setSearchCheckOut] = useState<string>("2026-10-29");
   const [searchGuests, setSearchGuests] = useState<string>("2 People");
+  const [appliedSearch, setAppliedSearch] = useState<{
+    destination: string;
+    activity: string;
+    date: string;
+    guests: string;
+  } | null>(null);
 
   // Filter state for popular tours
   const [activeTab, setActiveTab] = useState<string>("All");
+
+  // Read URL params on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const urlParams = new URLSearchParams(window.location.search);
+    const regionParam = urlParams.get("region");
+    const activityParam = urlParams.get("activity");
+    const dateParam = urlParams.get("date");
+    const guestsParam = urlParams.get("guests");
+
+    if (regionParam || activityParam || dateParam || guestsParam) {
+      const validRegions = ["Everest", "Annapurna", "Manaslu", "Langtang", "Bhutan", "Tibet"];
+      const matched = regionParam
+        ? validRegions.find((r) => r.toLowerCase() === regionParam.toLowerCase()) || "Everest"
+        : "Everest";
+      setSearchDestination(matched);
+      setActiveTab(matched);
+      if (activityParam) setSearchActivity(activityParam);
+      if (dateParam) setSearchCheckIn(dateParam);
+      if (guestsParam) setSearchGuests(guestsParam);
+      setAppliedSearch({
+        destination: matched,
+        activity: activityParam || "All",
+        date: dateParam || "",
+        guests: guestsParam || "2 People",
+      });
+    }
+  }, []);
+
+  // Handle Search Submit
+  const handleSearch = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    setAppliedSearch({
+      destination: searchDestination,
+      activity: searchActivity,
+      date: searchCheckIn,
+      guests: searchGuests,
+    });
+    setActiveTab(searchDestination === "All" ? "All" : searchDestination);
+
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams();
+      if (searchDestination && searchDestination !== "All") params.set("region", searchDestination.toLowerCase());
+      if (searchActivity && searchActivity !== "All") params.set("activity", searchActivity.toLowerCase());
+      if (searchCheckIn) params.set("date", searchCheckIn);
+      if (searchGuests) params.set("guests", searchGuests);
+      const newUrl = `${window.location.pathname}?${params.toString()}#packages`;
+      window.history.pushState({}, "", newUrl);
+
+      const target = document.getElementById("packages");
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
 
   // Video modal state
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
@@ -393,15 +453,24 @@ export default function Home() {
     }
   };
 
-  // Filtered packages
+  // Filtered packages with search parameter matching
   const filteredPackages = useMemo(() => {
     return DEMO_PACKAGES.filter((pkg) => {
-      if (activeTab !== "All" && pkg.region !== activeTab) {
+      if (appliedSearch) {
+        if (appliedSearch.destination !== "All" && pkg.region !== appliedSearch.destination) {
+          return false;
+        }
+        if (appliedSearch.activity !== "All" && appliedSearch.activity) {
+          if (appliedSearch.activity.toLowerCase() !== pkg.activity.toLowerCase()) {
+            return false;
+          }
+        }
+      } else if (activeTab !== "All" && pkg.region !== activeTab) {
         return false;
       }
       return true;
     });
-  }, [activeTab]);
+  }, [activeTab, appliedSearch]);
 
   // Accessibility: Detect prefers-reduced-motion
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -474,52 +543,18 @@ export default function Home() {
             <FancyTravelIcon name="compass" className="size-36" />
           </div>
 
-          {/* Top Tabs: Tour | Flight | Hotels */}
-          <div className="flex items-center justify-start gap-2 mb-5 pb-3 border-b border-stone-100">
-            <button
-              type="button"
-              onClick={() => setActiveSearchTab("tour")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                activeSearchTab === "tour"
-                  ? "bg-[#2D4A34] text-[#F5F3EF] shadow-md"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-              }`}
-            >
+          {/* Top Bar: Expeditions & Treks Focus (Flight and Hotels removed per requirements) */}
+          <div className="flex items-center justify-between mb-5 pb-3 border-b border-stone-100">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold bg-[#2D4A34] text-[#F5F3EF] shadow-md">
               <Compass className="size-4 text-[#7FA05C]" />
-              <span>Tour</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveSearchTab("flight")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                activeSearchTab === "flight"
-                  ? "bg-[#2D4A34] text-[#F5F3EF] shadow-md"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-              }`}
-            >
-              <Plane className="size-4 text-[#7FA05C]" />
-              <span>Flight</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setActiveSearchTab("hotels")}
-              className={`flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                activeSearchTab === "hotels"
-                  ? "bg-[#2D4A34] text-[#F5F3EF] shadow-md"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-              }`}
-            >
-              <Hotel className="size-4 text-[#7FA05C]" />
-              <span>Hotels</span>
-            </button>
+              <span>Himalayan Expedition &amp; Trek Search</span>
+            </div>
 
             {/* Visible animated 2D badge on tab bar right */}
             <div className="ml-auto hidden sm:flex items-center">
               <AnimatedTravelBadge
                 icon="tickets"
-                label="CONFIRMED RESERVATIONS"
+                label="CONFIRMED 2026 DEPARTURES"
                 animation="animate-float-gentle"
                 variant="light"
                 size="size-4"
@@ -527,36 +562,59 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Form Fields: Destination | Check In | Check Out | Guest | Reserve CTA */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3.5 items-end">
-            <div className="lg:col-span-4">
-              <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
+          {/* Form Fields: Destination | Activity | Departure Date | Guest | Search CTA */}
+          <form onSubmit={handleSearch} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3.5 items-end">
+            <div className="lg:col-span-3">
+              <label htmlFor="hero-destination-select" className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
                 Destination
               </label>
               <div className="relative">
                 <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#7FA05C]" />
                 <select
+                  id="hero-destination-select"
                   value={searchDestination}
                   onChange={(e) => setSearchDestination(e.target.value)}
                   className="w-full h-12 pl-10 pr-4 bg-[#F5F3EF] border border-[#7C8A96]/30 rounded-2xl text-xs font-semibold text-[#2D4A34] focus:outline-none focus:border-[#2D4A34] cursor-pointer appearance-none"
                 >
-                  <option value="Everest">Everest & Kala Patthar, Nepal</option>
-                  <option value="Annapurna">Annapurna Sanctuary & Circuit, Nepal</option>
-                  <option value="Manaslu">Manaslu Circuit Restricted, Nepal</option>
-                  <option value="Langtang">Langtang Valley & Glaciers, Nepal</option>
-                  <option value="Bhutan">Kingdom of Bhutan, Paro</option>
-                  <option value="Tibet">Lhasa & Kailash, Tibet</option>
+                  <option value="All">All Himalayan Regions</option>
+                  <option value="Everest">Everest &amp; Kala Patthar</option>
+                  <option value="Annapurna">Annapurna Sanctuary &amp; Circuit</option>
+                  <option value="Manaslu">Manaslu Circuit (Restricted)</option>
+                  <option value="Langtang">Langtang Valley &amp; Glaciers</option>
+                  <option value="Bhutan">Kingdom of Bhutan</option>
+                  <option value="Tibet">Lhasa &amp; Kailash, Tibet</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="lg:col-span-3">
+              <label htmlFor="hero-activity-select" className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
+                Expedition Activity
+              </label>
+              <div className="relative">
+                <Mountain className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#7FA05C]" />
+                <select
+                  id="hero-activity-select"
+                  value={searchActivity}
+                  onChange={(e) => setSearchActivity(e.target.value)}
+                  className="w-full h-12 pl-10 pr-4 bg-[#F5F3EF] border border-[#7C8A96]/30 rounded-2xl text-xs font-semibold text-[#2D4A34] focus:outline-none focus:border-[#2D4A34] cursor-pointer appearance-none"
+                >
+                  <option value="All">All Activities</option>
+                  <option value="Trekking">High Altitude Trekking</option>
+                  <option value="Peak Climbing">Technical Peak Climbing</option>
+                  <option value="Tour">Cultural Alpine Tour</option>
                 </select>
               </div>
             </div>
 
             <div className="lg:col-span-2">
-              <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
-                Check In
+              <label htmlFor="hero-departure-date" className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
+                Target Departure
               </label>
               <div className="relative">
                 <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#7FA05C]" />
                 <input
+                  id="hero-departure-date"
                   type="date"
                   value={searchCheckIn}
                   onChange={(e) => setSearchCheckIn(e.target.value)}
@@ -566,49 +624,35 @@ export default function Home() {
             </div>
 
             <div className="lg:col-span-2">
-              <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
-                Check Out
-              </label>
-              <div className="relative">
-                <Calendar className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#7FA05C]" />
-                <input
-                  type="date"
-                  value={searchCheckOut}
-                  onChange={(e) => setSearchCheckOut(e.target.value)}
-                  className="w-full h-12 pl-10 pr-3 bg-[#F5F3EF] border border-[#7C8A96]/30 rounded-2xl text-xs font-semibold text-[#2D4A34] focus:outline-none focus:border-[#2D4A34] cursor-pointer"
-                />
-              </div>
-            </div>
-
-            <div className="lg:col-span-2">
-              <label className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
-                Guest
+              <label htmlFor="hero-guests-select" className="block text-[11px] font-bold text-stone-500 uppercase tracking-wider mb-1.5">
+                Climbers / Party
               </label>
               <div className="relative">
                 <Users className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4 text-[#7FA05C]" />
                 <select
+                  id="hero-guests-select"
                   value={searchGuests}
                   onChange={(e) => setSearchGuests(e.target.value)}
                   className="w-full h-12 pl-10 pr-3 bg-[#F5F3EF] border border-[#7C8A96]/30 rounded-2xl text-xs font-semibold text-[#2D4A34] focus:outline-none focus:border-[#2D4A34] cursor-pointer appearance-none"
                 >
-                  <option value="1 Person">1 Person (Solo)</option>
-                  <option value="2 People">2 People (Duo)</option>
-                  <option value="4 People">4 People (Small Group)</option>
-                  <option value="8+ People">8+ People (Expedition)</option>
+                  <option value="1 Person">1 Climber (Solo)</option>
+                  <option value="2 People">2 Climbers (Duo)</option>
+                  <option value="4 People">4 Climbers (Team)</option>
+                  <option value="8+ People">8+ Climbers (Full Group)</option>
                 </select>
               </div>
             </div>
 
             <div className="lg:col-span-2">
-              <a
-                href="#packages"
+              <button
+                type="submit"
                 className="w-full h-12 flex items-center justify-center gap-2 rounded-2xl bg-[#2D4A34] hover:bg-[#1F2E23] text-[#F5F3EF] font-bold text-xs shadow-lg transition-all active:scale-95 cursor-pointer"
               >
-                <span>Reserve</span>
+                <span>Search Expeditions</span>
                 <ArrowRight className="size-3.5 text-[#7FA05C]" />
-              </a>
+              </button>
             </div>
-          </div>
+          </form>
         </div>
       </section>
 
@@ -810,6 +854,39 @@ export default function Home() {
               ))}
             </div>
           </div>
+
+          {/* Dynamic Search Results Banner (Visible when user searches from hero widget) */}
+          {appliedSearch && (
+            <div className="mb-8 p-4 rounded-2xl bg-white border border-[#2D4A34]/25 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2.5">
+                <div className="size-7 rounded-lg bg-[#7FA05C]/20 text-[#2D4A34] flex items-center justify-center font-bold">
+                  ✓
+                </div>
+                <div>
+                  <span className="font-extrabold text-[#2D4A34] block">
+                    Search Results: {appliedSearch.destination === "All" ? "All Himalayan Regions" : `${appliedSearch.destination} Region`}
+                    {appliedSearch.activity !== "All" && ` · ${appliedSearch.activity}`}
+                  </span>
+                  <span className="text-[#7C8A96] block text-[11px] mt-0.5">
+                    Target: {appliedSearch.date || "Flexible Date"} · Party: {appliedSearch.guests} · Found {filteredPackages.length} matching expedition{filteredPackages.length === 1 ? "" : "s"}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setAppliedSearch(null);
+                  setActiveTab("All");
+                  if (typeof window !== "undefined") {
+                    window.history.pushState({}, "", window.location.pathname);
+                  }
+                }}
+                className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-[#2D4A34] font-bold text-xs transition-colors cursor-pointer"
+              >
+                Clear Search Filter
+              </button>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPackages.map((pkg) => (

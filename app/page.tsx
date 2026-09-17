@@ -2758,11 +2758,13 @@ export default function Home() {
             onClick={(e) => e.stopPropagation()}
           >
             <video
-              src="/videos/hero-hq.mp4"
               controls
               autoPlay
               className="w-full h-full object-cover"
-            />
+            >
+              <source src="/videos/hero-hq.webm" type="video/webm" />
+              <source src="/videos/hero-hq.mp4" type="video/mp4" />
+            </video>
             <button
               type="button"
               onClick={() => setIsVideoModalOpen(false)}

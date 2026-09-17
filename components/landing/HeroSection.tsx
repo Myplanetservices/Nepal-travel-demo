@@ -186,8 +186,8 @@ export function HeroSection({
           onError={() => setVideoFailed(true)}
           className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none z-0"
         >
-          <source src="/videos/hero-hq.mp4" type="video/mp4" />
           <source src="/videos/hero-hq.webm" type="video/webm" />
+          <source src="/videos/hero-hq.mp4" type="video/mp4" />
           <source src="/videos/hero.mp4" type="video/mp4" />
         </video>
 

@@ -36,6 +36,7 @@ import {
   Car,
   GlassWater,
   Quote,
+  X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -171,155 +172,170 @@ const TOUR_CATEGORIES = [
   },
 ];
 
-// Tiered Expedition Passes (Dual-mode: Aerial Sunrise Flights & Alpine Ground Traverses)
-interface ExpeditionPass {
-  id: string;
-  tier: string;
-  badge?: string;
-  priceUsd: number;
-  unit: string;
-  altitude: string;
-  duration: string;
-  featured: boolean;
-  tagline: string;
-  features: string[];
-  buttonText: string;
-  link: string;
-  aeromedicalTag: string;
+// =========================================================================
+// ROUTE-SPECIFIC EXPEDITION PRICING DATA MODEL (Replaces generic SaaS tiers)
+// IMPORTANT: All rates, permit royalties, and inclusions below are clearly
+// marked PLACEHOLDERS awaiting finalized business rate-card details from client.
+// =========================================================================
+export interface RoutePricingGroupTier {
+  groupSize: string;
+  pricePlaceholder: string; // PLACEHOLDER: $XXXX — TBD
+  note?: string;
 }
 
-const EXPEDITION_PASSES: Record<"aerial" | "ground", ExpeditionPass[]> = {
-  aerial: [
-    {
-      id: "aerial-economic",
-      tier: "Essential Dawn Pass",
-      badge: "Classic Sunrise Flight",
-      priceUsd: 240,
-      unit: "/Person",
-      altitude: "4,200m Ridge",
-      duration: "1 Hour Scenic Flight",
-      featured: false,
-      tagline: "Sunrise aerial traverse viewing Everest, Lhotse & Langtang with guaranteed window seat.",
-      features: [
-        "1-Hour dawn flight corridor past Everest, Lhotse & Ama Dablam",
-        "Complimentary valley hotel chauffeur pick-up & return transfer",
-        "Guaranteed individual window seat with supplemental O2 safety briefing",
-        "National Park environmental conservation entry permit included",
-        "Standard aeromedical rescue standby insurance",
-      ],
-      buttonText: "Reserve Dawn Pass",
-      link: "/booking?package=economic-flight",
-      aeromedicalTag: "Standard O2 Briefing",
-    },
-    {
-      id: "aerial-exclusive",
-      tier: "Sovereign Private Charter",
-      badge: "👑 Most Chosen for Private Groups",
-      priceUsd: 1800,
-      unit: "/Basket (Private Craft)",
-      altitude: "6,800m Summit Ring",
-      duration: "2.5 Hours Extended Charter",
-      featured: true,
-      tagline: "VIP private aerial traverse with landing at Kala Patthar (5,545m) & champagne breakfast.",
-      features: [
-        "2.5-Hour extended private charter with Kala Patthar (5,545m) alpine touchdown",
-        "Private Mercedes-Benz chauffeur direct to VIP alpine helipad",
-        "Dedicated IFMGA Sherpa Guide & wilderness aeromedical escort",
-        "Emergency hyperbaric Gamow bag & continuous supplemental O2 on board",
-        "Champagne toast & Everest panoramic breakfast with commemorative medal",
-      ],
-      buttonText: "Reserve Sovereign Charter",
-      link: "/booking?package=exclusive-basket",
-      aeromedicalTag: "ICU Medical Oxygen Standby",
-    },
-    {
-      id: "aerial-standard",
-      tier: "Signature Mountain Flight",
-      badge: "Small Group · Max 8",
-      priceUsd: 320,
-      unit: "/Person",
-      altitude: "5,200m Amphitheater",
-      duration: "1.5 Hours Mountain Flight",
-      featured: false,
-      tagline: "Small-cabin aerial traverse with extended hover over Gokyo Lakes & Khumbu Glacier.",
-      features: [
-        "1.5-Hour sunrise mountain flight with Khumbu glacier & Lukla flyby",
-        "Free Kathmandu hotel pick-up & drop-off",
-        "Intimate small-group cabin guarantee (maximum 8 passengers per group)",
-        "4K digital flight telemetry video recording & route certificate",
-        "Full coverage aeromedical evacuation insurance included",
-      ],
-      buttonText: "Reserve Signature Pass",
-      link: "/booking?package=standard-flight",
-      aeromedicalTag: "Enhanced O2 Monitoring",
-    },
-  ],
-  ground: [
-    {
-      id: "ground-economic",
-      tier: "Valley Ridge Traverse",
-      badge: "Day Acclimatization",
-      priceUsd: 190,
-      unit: "/Person",
-      altitude: "3,200m Pine Ridge",
-      duration: "Full Day Guided Hike",
-      featured: false,
-      tagline: "Scenic ridge traverse through rhododendron forests with panoramic Himalayan views.",
-      features: [
-        "Full-day guided traverse across pristine mountain ridges",
-        "Private trailhead transport & local organic Sherpa tea lunch",
-        "Certified native trail guide & trekking poles provided",
-        "Entry permits to protected biological conservation sanctuaries",
-        "Standard trail medical & emergency communication support",
-      ],
-      buttonText: "Book Ridge Traverse",
-      link: "/booking?package=ridge-traverse",
-      aeromedicalTag: "First Aid Certified Lead",
-    },
-    {
-      id: "ground-exclusive",
-      tier: "High-Pass Heli-Trek Pass",
-      badge: "👑 Summit Ridge Insertion",
-      priceUsd: 1450,
-      unit: "/Private Duo (2 Trekkers)",
-      altitude: "5,416m Thorong La",
-      duration: "Heli-Drop & High Traverse",
-      featured: true,
-      tagline: "Helicopter drop onto high alpine ridge with private Everest guide and hot gourmet lunch.",
-      features: [
-        "Helicopter insertion directly to high alpine plateau (4,800m+)",
-        "Private 1-on-1 IFMGA Everest Summiteer mountain guide",
-        "Hot gourmet lunch & butter tea prepared at 4,900m panoramic station",
-        "Portable Gamow pressure chamber & pulse oximeter monitoring",
-        "Helicopter extraction back to luxury heritage mountain lodge",
-      ],
-      buttonText: "Book Heli-Trek Pass",
-      link: "/booking?package=heli-trek",
-      aeromedicalTag: "Wilderness Physician Escort",
-    },
-    {
-      id: "ground-standard",
-      tier: "Glacial Moraine Pass",
-      badge: "Small Group Guided",
-      priceUsd: 280,
-      unit: "/Person",
-      altitude: "4,600m Glacial Lake",
-      duration: "Extended Day Trek",
-      featured: false,
-      tagline: "Active alpine day traverse along glacial lateral moraines and suspension bridges.",
-      features: [
-        "Rigorous 7-hour guided traverse of scenic glacial moraine corridors",
-        "Full technical gear package (microspikes, poles, gaiters included)",
-        "High-energy organic trail rations & warm hydration packs",
-        "Wilderness First Responder lead with satellite communication phone",
-        "TIMS card and Sagarmatha / Annapurna entry permits handled in advance",
-      ],
-      buttonText: "Book Moraine Pass",
-      link: "/booking?package=moraine-pass",
-      aeromedicalTag: "Satellite SOS Active",
-    },
-  ],
-};
+export interface RouteSpecificPricing {
+  id: string;
+  routeName: string;
+  region: string;
+  duration: string;
+  maxAltitude: string;
+  difficulty: string;
+  badge: string;
+  featured: boolean;
+  tagline: string;
+  // Group size pricing tiers
+  groupTiers: RoutePricingGroupTier[];
+  // Regulatory & Permit Fees (Placeholder)
+  permitRoyaltiesPlaceholder: string; // PLACEHOLDER: [Permit fee pending — TBD]
+  // Guide Ratio (Placeholder)
+  guideRatioPlaceholder: string; // PLACEHOLDER: [Guide ratio pending — TBD]
+  // Explicit Inclusions (Placeholder)
+  inclusionsPending: string[];
+  // Explicit Exclusions (Placeholder)
+  exclusionsPending: string[];
+  link: string;
+}
+
+const ROUTE_SPECIFIC_PRICING: RouteSpecificPricing[] = [
+  {
+    id: "route-everest-ebc",
+    routeName: "Everest Base Camp & Gokyo Ri Circuit",
+    region: "Khumbu Valley, Nepal",
+    duration: "18 Days",
+    maxAltitude: "5,364m (Kala Patthar)",
+    difficulty: "Strenuous Alpine Trek",
+    badge: "Flagship Route",
+    featured: true,
+    tagline: "High-altitude traverse combining turquoise Gokyo Lakes, Cho La Pass, and Everest Base Camp with heated lodge allocations.",
+    groupTiers: [
+      { groupSize: "Solo Climber (1 Person)", pricePlaceholder: "$XXXX — TBD (Solo rate pending client rate card)" },
+      { groupSize: "Small Team (2–4 Climbers)", pricePlaceholder: "$XXXX — TBD (Small group rate pending client rate card)" },
+      { groupSize: "Expedition Team (6–10 Climbers)", pricePlaceholder: "$XXXX — TBD (Team rate pending client rate card)" },
+    ],
+    permitRoyaltiesPlaceholder: "[Permit fee pending: Sagarmatha National Park entry + Khumbu Pasang Lhamu local permit — TBD]",
+    guideRatioPlaceholder: "[Guide ratio pending: 1:4 Sherpa lead ratio + 1:1 summit support — TBD]",
+    inclusionsPending: [
+      "[Inclusion pending: Kathmandu–Lukla round-trip domestic flights — TBD]",
+      "[Inclusion pending: All lodge accommodation & hot meals during trek — TBD]",
+      "[Inclusion pending: UIAGM/IFMGA certified Sherpa guide & porter team — TBD]",
+      "[Inclusion pending: Pulse oximeter monitoring & Gamow hyperbaric bag standby — TBD]",
+      "[Inclusion pending: Official park permits & TIMS registration cards — TBD]",
+    ],
+    exclusionsPending: [
+      "[Exclusion pending: International airfare to/from Kathmandu — TBD]",
+      "[Exclusion pending: Mandatory high-altitude helicopter evacuation insurance — TBD]",
+      "[Exclusion pending: Personal sleeping bag, down jacket, and technical gear — TBD]",
+      "[Exclusion pending: Personal gratuity/tips for Sherpas and porters — TBD]",
+    ],
+    link: "/tour/everest-base-camp-trek",
+  },
+  {
+    id: "route-annapurna-circuit",
+    routeName: "Annapurna Circuit & Thorong La Pass",
+    region: "Annapurna Sanctuary, Nepal",
+    duration: "16 Days",
+    maxAltitude: "5,416m (Thorong La)",
+    difficulty: "Challenging High Pass",
+    badge: "Classic Traverse",
+    featured: false,
+    tagline: "Complete circumambulation of the Annapurna massif crossing Thorong La Pass and descending to sacred Muktinath.",
+    groupTiers: [
+      { groupSize: "Solo Climber (1 Person)", pricePlaceholder: "$XXXX — TBD (Solo rate pending client rate card)" },
+      { groupSize: "Small Team (2–4 Climbers)", pricePlaceholder: "$XXXX — TBD (Small group rate pending client rate card)" },
+      { groupSize: "Expedition Team (6–10 Climbers)", pricePlaceholder: "$XXXX — TBD (Team rate pending client rate card)" },
+    ],
+    permitRoyaltiesPlaceholder: "[Permit fee pending: Annapurna Conservation Area Project (ACAP) + TIMS card — TBD]",
+    guideRatioPlaceholder: "[Guide ratio pending: 1:4 guide ratio + dedicated porter per pair — TBD]",
+    inclusionsPending: [
+      "[Inclusion pending: Pokhara & Kathmandu ground/air transportation — TBD]",
+      "[Inclusion pending: Full teahouse lodging & daily trail rations — TBD]",
+      "[Inclusion pending: Licensed high-altitude mountain guide & porters — TBD]",
+      "[Inclusion pending: Emergency satellite SOS tracking link — TBD]",
+      "[Inclusion pending: Conservation area entry permits & TIMS — TBD]",
+    ],
+    exclusionsPending: [
+      "[Exclusion pending: International flights to Nepal — TBD]",
+      "[Exclusion pending: Medical and evacuation emergency travel insurance — TBD]",
+      "[Exclusion pending: Cold-weather personal trekking equipment — TBD]",
+      "[Exclusion pending: Personal hot showers, WiFi, and battery charging — TBD]",
+    ],
+    link: "/tour/annapurna-circuit-trek",
+  },
+  {
+    id: "route-ama-dablam",
+    routeName: "Ama Dablam Technical Expedition",
+    region: "Khumbu Valley, Nepal",
+    duration: "24 Days",
+    maxAltitude: "6,812m (Ama Dablam Summit)",
+    difficulty: "Technical Alpine (Class 5)",
+    badge: "Technical Peak",
+    featured: false,
+    tagline: "Demanding technical mountaineering climb on steep granite ridges, ice flutings, and fixed ropes above Camp 2.",
+    groupTiers: [
+      { groupSize: "1 Climber : 1 Guide (Private)", pricePlaceholder: "$XXXX — TBD (1:1 Alpine summit rate pending client input)" },
+      { groupSize: "Small Team (2–4 Climbers)", pricePlaceholder: "$XXXX — TBD (Team alpine rate pending client input)" },
+      { groupSize: "Expedition Group (6+ Climbers)", pricePlaceholder: "$XXXX — TBD (Group rate pending client input)" },
+    ],
+    permitRoyaltiesPlaceholder: "[Permit fee pending: Department of Tourism climbing royalty & liaison officer fee — TBD]",
+    guideRatioPlaceholder: "[Guide ratio pending: Strict 1:1 Climber to UIAGM/IFMGA Sherpa guide ratio — TBD]",
+    inclusionsPending: [
+      "[Inclusion pending: Expedition basecamp and high-camp tents & stoves — TBD]",
+      "[Inclusion pending: Fixing ropes, snow stakes, and high-altitude food — TBD]",
+      "[Inclusion pending: Basecamp cook, kitchen team, and dining tent — TBD]",
+      "[Inclusion pending: Supplemental oxygen bottle & mask for summit bid — TBD]",
+      "[Inclusion pending: Government climbing permit & waste deposit management — TBD]",
+    ],
+    exclusionsPending: [
+      "[Exclusion pending: International airfare to Kathmandu — TBD]",
+      "[Exclusion pending: High-altitude rescue insurance up to 7,000m — TBD]",
+      "[Exclusion pending: Technical climbing hardware (harness, crampons, ice axes) — TBD]",
+      "[Exclusion pending: Summit bonus for personal climbing Sherpa — TBD]",
+    ],
+    link: "/booking?package=ama-dablam",
+  },
+  {
+    id: "route-mustang",
+    routeName: "Upper Mustang Walled Kingdom",
+    region: "Mustang, Nepal",
+    duration: "14 Days",
+    maxAltitude: "3,840m (Lo Manthang)",
+    difficulty: "Moderate Cultural Trek",
+    badge: "Restricted Sanctuary",
+    featured: false,
+    tagline: "Trans-Himalayan desert journey to the ancient walled capital of Lo Manthang and centuries-old Tibetan sky caves.",
+    groupTiers: [
+      { groupSize: "Solo Traveler (Min 2 required by law)", pricePlaceholder: "$XXXX — TBD (Pairing rate pending client input)" },
+      { groupSize: "Small Team (2–4 Travelers)", pricePlaceholder: "$XXXX — TBD (Small group rate pending client input)" },
+      { groupSize: "Group (6–10 Travelers)", pricePlaceholder: "$XXXX — TBD (Group rate pending client input)" },
+    ],
+    permitRoyaltiesPlaceholder: "[Permit fee pending: Restricted Area Permit ($500/person for 10 days) + ACAP — TBD]",
+    guideRatioPlaceholder: "[Guide ratio pending: Government registered licensed cultural trekking guide — TBD]",
+    inclusionsPending: [
+      "[Inclusion pending: Jomsom domestic mountain flights roundtrip — TBD]",
+      "[Inclusion pending: Restricted area permits ($500 value) & ACAP — TBD]",
+      "[Inclusion pending: Heritage boutique lodge rooms & local meals — TBD]",
+      "[Inclusion pending: 4x4 overland backup vehicle on standby — TBD]",
+      "[Inclusion pending: Cultural liaison and monastery entrance fees — TBD]",
+    ],
+    exclusionsPending: [
+      "[Exclusion pending: International flights — TBD]",
+      "[Exclusion pending: Personal medical and cancellation insurance — TBD]",
+      "[Exclusion pending: Tips for local guide, driver, and porters — TBD]",
+      "[Exclusion pending: Personal horse rental or monastery donation fees — TBD]",
+    ],
+    link: "/tour/upper-mustang-trek",
+  },
+];
 
 // Special Offers (Tactile Dual-Chamber Himalayan Expedition Vouchers)
 const SPECIAL_OFFERS = [
@@ -475,9 +491,9 @@ export default function Home() {
   // Accessibility: Detect prefers-reduced-motion
   const prefersReducedMotion = usePrefersReducedMotion();
 
-  // Section 6: Tiered Expedition Passes state & reveal
+  // Section 6: Route-Specific Pricing state & reveal
   const { ref: section6Ref, inView: section6InView } = useIntersectionReveal(0.12);
-  const [packageMode, setPackageMode] = useState<"aerial" | "ground">("aerial");
+  const [selectedRoutePricingId, setSelectedRoutePricingId] = useState<string>("route-everest-ebc");
 
   // Task 2 & Follow-up: Section 7 entrance reveal & mountain image parallax
   const { ref: section7Ref, inView: section7InView } = useIntersectionReveal(0.15);
@@ -1240,209 +1256,191 @@ export default function Home() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          {/* Header with Eyebrow, Editorial Title, and Interactive Mode Switcher */}
-          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6">
+          {/* Header with Eyebrow, Route-Specific Title, and Notice */}
+          <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-8 gap-6">
             <div className="max-w-2xl">
-              <SectionEyebrow>Tiered Expedition Passes</SectionEyebrow>
+              <SectionEyebrow>Route-Specific Expedition Pricing &amp; Inclusions</SectionEyebrow>
               <h2 className="font-heading font-extrabold text-3xl sm:text-4xl md:text-5xl text-pine tracking-tight leading-[1.3] text-balance">
-                Choose Your Altitude &amp; Expedition Tier
+                Transparent Pricing by Mountain &amp; Route
               </h2>
               <p className="text-text/80 text-sm sm:text-base mt-3 leading-relaxed">
-                From shared sunrise flights past Everest and Langtang to VIP helicopter traverses and private Sherpa-led summit passes.
+                Every Himalayan route requires custom permits, acclimatization schedules, and dedicated Sherpa ratios. Explore per-route rates structured by party size.
               </p>
             </div>
 
-            {/* Interactive Experience Mode Switcher */}
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-              <span className="text-xs font-bold text-mountain uppercase tracking-wider hidden xl:inline">
-                Expedition Mode:
+            {/* Clearly marked placeholder notice banner */}
+            <div className="px-4 py-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 text-xs max-w-md">
+              <span className="font-bold block mb-1">📋 Business Content Notice:</span>
+              <span className="opacity-90 block">
+                Official 2026-2027 per-route rate cards, government permit fees, and inclusions are currently formatted as placeholders ($XXXX — TBD) awaiting finalized business data.
               </span>
-              <div className="inline-flex p-1.5 rounded-full bg-surface border border-mountain/25 shadow-xs">
-                <button
-                  type="button"
-                  onClick={() => setPackageMode("aerial")}
-                  aria-pressed={packageMode === "aerial"}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                    packageMode === "aerial"
-                      ? "bg-pine text-white shadow-sm"
-                      : "text-mountain hover:text-pine"
-                  }`}
-                >
-                  <Plane className="size-3.5" />
-                  <span>Aerial Mountain Flights</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPackageMode("ground")}
-                  aria-pressed={packageMode === "ground"}
-                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
-                    packageMode === "ground"
-                      ? "bg-pine text-white shadow-sm"
-                      : "text-mountain hover:text-pine"
-                  }`}
-                >
-                  <Mountain className="size-3.5" />
-                  <span>High-Alpine Traverses</span>
-                </button>
-              </div>
             </div>
           </div>
 
-          {/* 3 Bento Cards with AnimatePresence */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={packageMode}
-              initial={prefersReducedMotion ? undefined : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
-              transition={{ duration: 0.35, ease: "easeOut" }}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch"
-            >
-              {EXPEDITION_PASSES[packageMode].map((pkg) => {
-                const isExclusive = pkg.featured;
+          {/* Interactive Route Selector Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8">
+            {ROUTE_SPECIFIC_PRICING.map((route) => (
+              <button
+                key={route.id}
+                type="button"
+                onClick={() => setSelectedRoutePricingId(route.id)}
+                className={`px-5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 border ${
+                  selectedRoutePricingId === route.id
+                    ? "bg-pine text-white border-pine shadow-md"
+                    : "bg-surface text-stone-600 border-mountain/20 hover:border-pine/40 hover:text-pine"
+                }`}
+              >
+                <Mountain className="size-3.5 text-[#7FA05C]" />
+                <span>{route.routeName}</span>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full ${
+                  selectedRoutePricingId === route.id ? "bg-white/20 text-white" : "bg-stone-100 text-stone-500"
+                }`}>
+                  {route.duration}
+                </span>
+              </button>
+            ))}
+          </div>
 
-                return (
-                  <div
-                    key={pkg.id}
-                    className={`rounded-3xl p-7 sm:p-8 flex flex-col justify-between transition-all duration-300 relative group ${
-                      isExclusive
-                        ? "bg-pine text-white shadow-2xl lg:-translate-y-4 hover:-translate-y-6 hover:shadow-2xl border-2 border-accent-gold/70"
-                        : "bg-surface text-text border border-mountain/20 hover:border-mountain/45 hover:shadow-xl hover:-translate-y-2"
-                    }`}
-                  >
-                    {/* Top Ribbon for Sovereign / Exclusive Card */}
-                    {isExclusive && (
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-accent-gold via-amber-300 to-accent-gold text-pine text-[10px] font-black uppercase tracking-widest shadow-md flex items-center gap-1.5 whitespace-nowrap">
-                        <Sparkles className="size-3" />
-                        <span>Most Chosen for Private Expeditions</span>
-                      </div>
-                    )}
-
+          {/* Route-Specific Pricing Display Card */}
+          {(() => {
+            const route = ROUTE_SPECIFIC_PRICING.find((r) => r.id === selectedRoutePricingId) || ROUTE_SPECIFIC_PRICING[0];
+            return (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={route.id}
+                  initial={prefersReducedMotion ? undefined : { opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: -12 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="bg-white rounded-3xl border border-mountain/25 shadow-xl p-6 sm:p-10"
+                >
+                  {/* Route Header Row */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 border-b border-stone-100 gap-4">
                     <div>
-                      {/* Tier & Badge row */}
-                      <div className="flex items-center justify-between mb-3 pt-1">
-                        <span
-                          className={`text-xs font-bold uppercase tracking-wider ${
-                            isExclusive ? "text-accent-gold" : "text-mountain"
-                          }`}
-                        >
-                          {pkg.tier}
+                      <div className="flex items-center gap-2.5 mb-1.5">
+                        <span className="px-3 py-1 rounded-full bg-pine/10 text-pine font-bold text-[11px] uppercase tracking-wider">
+                          {route.badge}
                         </span>
-                        {pkg.badge && !isExclusive && (
-                          <span className="px-2.5 py-0.5 rounded-full bg-mountain/10 text-pine text-[10px] font-bold uppercase tracking-wide">
-                            {pkg.badge}
-                          </span>
-                        )}
-                        {isExclusive && (
-                          <span className="px-2.5 py-0.5 rounded-full bg-accent-gold/20 text-accent-gold border border-accent-gold/40 text-[10px] font-extrabold uppercase tracking-widest">
-                            VIP Sovereign
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Dynamic Currency Price */}
-                      <div className="flex items-baseline gap-1.5 mt-2 mb-2">
-                        <span
-                          className={`text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight ${
-                            isExclusive ? "text-white" : "text-pine"
-                          }`}
-                        >
-                          {formatPrice(pkg.priceUsd)}
-                        </span>
-                        <span
-                          className={`text-xs font-semibold ${
-                            isExclusive ? "text-stone-300" : "text-mountain"
-                          }`}
-                        >
-                          {pkg.unit}
+                        <span className="text-xs text-stone-500 font-medium">
+                          {route.region}
                         </span>
                       </div>
-
-                      {/* Tagline */}
-                      <p
-                        className={`text-xs leading-relaxed mb-6 ${
-                          isExclusive ? "text-stone-200/90" : "text-text/75"
-                        }`}
-                      >
-                        {pkg.tagline}
+                      <h3 className="font-heading font-extrabold text-2xl sm:text-3xl text-pine">
+                        {route.routeName}
+                      </h3>
+                      <p className="text-stone-600 text-xs sm:text-sm mt-1 max-w-2xl">
+                        {route.tagline}
                       </p>
+                    </div>
 
-                      {/* Altitude & Duration Micro-Specs */}
-                      <div
-                        className={`p-3 rounded-2xl mb-6 flex items-center justify-between text-xs font-medium border ${
-                          isExclusive
-                            ? "bg-white/10 border-white/15 text-white"
-                            : "bg-background border-mountain/15 text-pine"
-                        }`}
-                      >
-                        <div className="flex items-center gap-1.5">
-                          <Mountain
-                            className={`size-3.5 ${
-                              isExclusive ? "text-accent-gold" : "text-meadow"
-                            }`}
-                          />
-                          <span className="font-semibold">{pkg.altitude}</span>
-                        </div>
-                        <div className="text-[11px] opacity-80">
-                          {pkg.duration}
-                        </div>
+                    <div className="flex items-center gap-3">
+                      <div className="text-right">
+                        <span className="text-[11px] text-stone-400 uppercase font-mono block">Max Elevation</span>
+                        <span className="text-sm font-extrabold text-[#7FA05C]">{route.maxAltitude}</span>
                       </div>
+                      <div className="h-8 w-px bg-stone-200" />
+                      <div className="text-right">
+                        <span className="text-[11px] text-stone-400 uppercase font-mono block">Duration</span>
+                        <span className="text-sm font-extrabold text-[#2D4A34]">{route.duration}</span>
+                      </div>
+                    </div>
+                  </div>
 
-                      {/* Features Checklist */}
-                      <ul className="space-y-3 mb-8">
-                        {pkg.features.map((feat, idx) => (
-                          <li key={idx} className="flex items-start gap-2.5 text-xs leading-relaxed">
-                            <span
-                              className={`size-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                                isExclusive
-                                  ? "bg-accent-gold text-pine"
-                                  : "bg-pine text-white"
-                              }`}
-                            >
-                              <Check className="size-2.5 stroke-[3]" />
+                  {/* Group-Size Pricing Tiers (Placeholders) */}
+                  <div className="my-8">
+                    <h4 className="text-xs font-extrabold text-pine uppercase tracking-wider mb-4 flex items-center gap-2">
+                      <Users className="size-4 text-[#7FA05C]" />
+                      <span>Group-Size Pricing Tiers (Per Person Rates)</span>
+                    </h4>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {route.groupTiers.map((tier, idx) => (
+                        <div
+                          key={idx}
+                          className="p-5 rounded-2xl bg-[#F5F3EF] border border-[#7C8A96]/20 flex flex-col justify-between"
+                        >
+                          <div>
+                            <span className="text-xs font-bold text-pine block mb-1">
+                              {tier.groupSize}
                             </span>
-                            <span
-                              className={
-                                isExclusive
-                                  ? "text-stone-200 font-medium"
-                                  : "text-text/85 font-medium"
-                              }
-                            >
-                              {feat}
-                            </span>
+                            <div className="text-lg sm:text-xl font-black text-[#2D4A34] mt-2 font-mono">
+                              {tier.pricePlaceholder}
+                            </div>
+                          </div>
+                          <span className="text-[11px] text-stone-500 mt-2 block">
+                            * Final rate card TBD by agency
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Regulatory, Permit & Guide Ratio Placeholders */}
+                  <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200/80 mb-8 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div>
+                      <span className="font-bold text-pine block mb-1">Permit &amp; Conservation Royalties:</span>
+                      <span className="text-stone-600 font-mono text-[11px]">
+                        {route.permitRoyaltiesPlaceholder}
+                      </span>
+                    </div>
+                    <div>
+                      <span className="font-bold text-pine block mb-1">Expedition Guide &amp; Porter Ratio:</span>
+                      <span className="text-stone-600 font-mono text-[11px]">
+                        {route.guideRatioPlaceholder}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* 2-Column Inclusions vs Exclusions Breakdown (Placeholders) */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-6 border-t border-stone-100">
+                    <div>
+                      <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#2D4A34] flex items-center gap-2 mb-4">
+                        <CheckCircle2 className="size-4 text-[#7FA05C]" />
+                        <span>Included in This Route (Pending Final Client Specs)</span>
+                      </h4>
+                      <ul className="space-y-2.5">
+                        {route.inclusionsPending.map((inc, i) => (
+                          <li key={i} className="flex items-start gap-2.5 text-xs text-stone-600 font-mono">
+                            <span className="size-1.5 rounded-full bg-[#7FA05C] shrink-0 mt-1.5" />
+                            <span>{inc}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
 
-                    {/* Bottom Action Section */}
                     <div>
-                      <div
-                        className={`text-[10px] font-bold uppercase tracking-wider mb-3 flex items-center gap-1 ${
-                          isExclusive ? "text-accent-gold" : "text-mountain"
-                        }`}
-                      >
-                        <ShieldCheck className="size-3" />
-                        <span>{pkg.aeromedicalTag}</span>
-                      </div>
-
-                      <Link
-                        href={pkg.link}
-                        className={`w-full py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-xs ${
-                          isExclusive
-                            ? "bg-white text-pine hover:bg-accent-gold hover:text-white shadow-md font-extrabold"
-                            : "bg-pine text-white hover:bg-pine/90 shadow-sm"
-                        }`}
-                      >
-                        <span>{pkg.buttonText}</span>
-                        <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
-                      </Link>
+                      <h4 className="text-xs font-extrabold uppercase tracking-wider text-stone-500 flex items-center gap-2 mb-4">
+                        <X className="size-4 text-stone-400" />
+                        <span>Not Included / Excluded (Pending Final Client Specs)</span>
+                      </h4>
+                      <ul className="space-y-2.5">
+                        {route.exclusionsPending.map((exc, i) => (
+                          <li key={i} className="flex items-start gap-2.5 text-xs text-stone-500 font-mono">
+                            <span className="size-1.5 rounded-full bg-stone-400 shrink-0 mt-1.5" />
+                            <span>{exc}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-                );
-              })}
-            </motion.div>
-          </AnimatePresence>
+
+                  {/* Route Action Footer */}
+                  <div className="mt-8 pt-6 border-t border-stone-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <span className="text-xs text-stone-500">
+                      Looking to customize departure dates or private guide ratios for this route?
+                    </span>
+                    <Link
+                      href={route.link}
+                      className="px-6 py-3 rounded-2xl bg-[#2D4A34] hover:bg-[#1E3324] text-white text-xs font-bold shadow-md transition-all flex items-center gap-2"
+                    >
+                      <span>Inquire for {route.routeName}</span>
+                      <ArrowRight className="size-3.5 text-[#7FA05C]" />
+                    </Link>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            );
+          })()}
 
           {/* Bottom Alpine Expedition Guarantee Ribbon */}
           <div className="mt-14 text-center">

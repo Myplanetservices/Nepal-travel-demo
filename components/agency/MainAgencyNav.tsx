@@ -26,6 +26,31 @@ export function MainAgencyNav() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const triggerRef = React.useRef<HTMLButtonElement>(null);
+
+  // Close dropdown on click outside or Escape key
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && activeDropdown) {
+        setActiveDropdown(null);
+        triggerRef.current?.focus();
+      }
+    };
+
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [activeDropdown]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,24 +113,36 @@ export function MainAgencyNav() {
 
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-6 text-xs font-bold text-white">
-            {/* Nepal Mega Menu */}
+            {/* Nepal Mega Menu with Click/Tap Disclosure & Full ARIA Keyboard Support */}
             <div
+              ref={dropdownRef}
               className="relative py-2"
-              onMouseEnter={() => setActiveDropdown("nepal")}
-              onMouseLeave={() => setActiveDropdown(null)}
             >
               <button
+                ref={triggerRef}
+                id="nepal-nav-trigger"
                 type="button"
+                onClick={() => setActiveDropdown((cur) => (cur === "nepal" ? null : "nepal"))}
+                aria-expanded={activeDropdown === "nepal"}
+                aria-haspopup="true"
+                aria-controls="nepal-nav-menu"
                 className={`flex items-center gap-1 hover:text-[#D9A23B] transition-colors cursor-pointer py-1 ${
                   activeDropdown === "nepal" ? "text-[#D9A23B]" : ""
                 }`}
               >
                 <span>NEPAL TREKS</span>
-                <ChevronDown className="size-3.5 opacity-70" />
+                <ChevronDown className={`size-3.5 opacity-70 transition-transform duration-200 ${
+                  activeDropdown === "nepal" ? "rotate-180 text-[#D9A23B]" : ""
+                }`} />
               </button>
 
               {activeDropdown === "nepal" && (
-                <div className="absolute top-full left-0 w-[540px] bg-white text-[#33322E] rounded-xl shadow-2xl border border-[#7C8A96]/20 p-5 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150 z-50">
+                <div
+                  id="nepal-nav-menu"
+                  role="menu"
+                  aria-labelledby="nepal-nav-trigger"
+                  className="absolute top-full left-0 w-[540px] bg-white text-[#33322E] rounded-xl shadow-2xl border border-[#7C8A96]/20 p-5 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150 z-50"
+                >
                   <div>
                     <div className="text-[11px] font-extrabold uppercase tracking-wider text-[#7FA05C] mb-2.5">
                       Signature Routes
@@ -115,7 +152,8 @@ export function MainAgencyNav() {
                         <li key={pkg.id}>
                           <Link
                             href={`/tour/${pkg.slug}`}
-                            className="block p-2 rounded-lg hover:bg-[#F5F3EF] transition-colors"
+                            role="menuitem"
+                            className="block p-2 rounded-lg hover:bg-[#F5F3EF] focus:bg-[#F5F3EF] focus:outline-none focus:ring-1 focus:ring-[#7FA05C] transition-colors"
                             onClick={() => setActiveDropdown(null)}
                           >
                             <div className="font-bold text-xs text-[#2D4A34] hover:underline">
@@ -138,28 +176,32 @@ export function MainAgencyNav() {
                       <div className="space-y-1.5 text-xs">
                         <Link
                           href="/tour?region=Everest"
-                          className="block py-1 hover:text-[#2D4A34] font-medium"
+                          role="menuitem"
+                          className="block py-1 hover:text-[#2D4A34] focus:text-[#2D4A34] focus:outline-none font-medium"
                           onClick={() => setActiveDropdown(null)}
                         >
                           🏔️ Everest Base Camp & Kala Patthar
                         </Link>
                         <Link
                           href="/tour?region=Annapurna"
-                          className="block py-1 hover:text-[#2D4A34] font-medium"
+                          role="menuitem"
+                          className="block py-1 hover:text-[#2D4A34] focus:text-[#2D4A34] focus:outline-none font-medium"
                           onClick={() => setActiveDropdown(null)}
                         >
                           🌿 Annapurna Circuit & Sanctuary
                         </Link>
                         <Link
                           href="/tour?region=Manaslu"
-                          className="block py-1 hover:text-[#2D4A34] font-medium"
+                          role="menuitem"
+                          className="block py-1 hover:text-[#2D4A34] focus:text-[#2D4A34] focus:outline-none font-medium"
                           onClick={() => setActiveDropdown(null)}
                         >
                           🦅 Manaslu Circuit (Restricted Area)
                         </Link>
                         <Link
                           href="/tour?region=Langtang"
-                          className="block py-1 hover:text-[#2D4A34] font-medium"
+                          role="menuitem"
+                          className="block py-1 hover:text-[#2D4A34] focus:text-[#2D4A34] focus:outline-none font-medium"
                           onClick={() => setActiveDropdown(null)}
                         >
                           🌸 Langtang Valley Eco Traverses
@@ -170,7 +212,8 @@ export function MainAgencyNav() {
                     <div className="pt-3 border-t border-[#7C8A96]/15 mt-3">
                       <Link
                         href="/tour"
-                        className="inline-flex items-center gap-1 text-xs font-bold text-[#3E7C94] hover:underline"
+                        role="menuitem"
+                        className="inline-flex items-center gap-1 text-xs font-bold text-[#3E7C94] hover:underline focus:underline focus:outline-none"
                         onClick={() => setActiveDropdown(null)}
                       >
                         Browse All Trips <ArrowRight className="size-3" />

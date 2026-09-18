@@ -25,6 +25,17 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
       smoothWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 1.5,
+      prevent: (node) => {
+        if (!node || typeof (node as HTMLElement).closest !== "function") return false;
+        const el = node as HTMLElement;
+        return (
+          el.hasAttribute("data-lenis-prevent") ||
+          el.closest("[data-lenis-prevent]") !== null ||
+          el.closest("#zenith-chat-panel") !== null ||
+          el.closest("#customizer-modal-panel") !== null ||
+          el.closest("[role='dialog']") !== null
+        );
+      },
     });
 
     lenisRef.current = lenis;

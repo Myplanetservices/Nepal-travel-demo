@@ -1,10 +1,13 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import Link from "next/link";
 import {
   TrendingUp,
   Zap,
   ShieldCheck,
+  Compass,
+  Sparkles,
 } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -29,6 +32,7 @@ export function HeroSection({
   const videoRef = useRef<HTMLVideoElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
+  const heroContentRef = useRef<HTMLDivElement>(null);
 
   const [isVideoReady, setIsVideoReady] = useState(false);
   const [videoDuration, setVideoDuration] = useState<number>(10);
@@ -131,6 +135,21 @@ export function HeroSection({
           });
         }
 
+        // Hero content text smooth fade-out as user begins scrolling down
+        if (heroContentRef.current) {
+          gsap.to(heroContentRef.current, {
+            opacity: 0,
+            y: -25,
+            ease: "power1.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top top",
+              end: () => `+=${totalScrollDistance * 0.25}`,
+              scrub: 0.6,
+            },
+          });
+        }
+
         // Scrub prompt indicator fade
         if (indicatorRef.current) {
           gsap.to(indicatorRef.current, {
@@ -199,6 +218,74 @@ export function HeroSection({
           />
         )}
 
+        {/* Subtle Cinematic Vignette for crystal-clear readability */}
+        <div
+          ref={overlayRef}
+          className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/20 to-transparent pointer-events-none z-1"
+        />
+
+        {/* Hero Expedition Narrative Content */}
+        <div
+          ref={heroContentRef}
+          className="relative z-10 max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 md:pt-32 text-center pointer-events-auto flex flex-col items-center justify-start select-none"
+        >
+          {/* Eyebrow Badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 shadow-md text-xs font-bold text-white mb-3 animate-in fade-in duration-300">
+            <span className="flex size-2 rounded-full bg-[#7FA05C] animate-pulse" />
+            <span className="tracking-wide">Certified Sherpa Expeditions · Nepal · Bhutan · Tibet</span>
+          </div>
+
+          {/* Main Hero Headline */}
+          <h1 className="font-heading font-black text-3xl sm:text-5xl lg:text-6xl text-white tracking-tight leading-[1.08] drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)] mb-3">
+            Pioneering Journeys Across the High Himalayas
+          </h1>
+
+          {/* Authentic Description */}
+          <p className="max-w-xl text-xs sm:text-sm lg:text-base text-white/95 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] mb-5">
+            Authentic, Sherpa-led traverses from Everest Base Camp to sacred valleys. Guaranteed 2026 departures, verified permits, and uncompromised alpine safety since 2008.
+          </p>
+
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="#packages"
+              className="px-5 py-2.5 rounded-xl bg-[#2D4A34] hover:bg-[#1E3725] text-white font-extrabold text-xs sm:text-sm shadow-lg hover:shadow-xl transition-all active:scale-95 flex items-center gap-2 border border-white/20 cursor-pointer"
+            >
+              <span>Explore Expeditions</span>
+              <Compass className="size-4 text-[#7FA05C]" />
+            </a>
+
+            <Link
+              href="/trip-planner"
+              className="px-5 py-2.5 rounded-xl bg-white/90 hover:bg-white text-[#2D4A34] hover:text-[#DD6B2E] border border-white/40 backdrop-blur-md font-extrabold text-xs sm:text-sm shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
+            >
+              <Sparkles className="size-4 text-[#DD6B2E]" />
+              <span>AI Trip Planner</span>
+            </Link>
+          </div>
+
+          {/* Trust Highlights */}
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-[11px] font-bold text-white bg-black/35 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 shadow-md">
+            <span className="flex items-center gap-1">
+              <ShieldCheck className="size-3.5 text-[#7FA05C]" />
+              Govt. Reg. #NP-78492
+            </span>
+            <span className="text-white/40">·</span>
+            <span>⭐ 4.9/5 Rating (420+ Climbers)</span>
+            <span className="text-white/40">·</span>
+            <span>📅 10% Flexible Deposit</span>
+          </div>
+        </div>
+
+        {/* Bottom Scroll Prompt Indicator */}
+        <div
+          ref={indicatorRef}
+          className="relative z-10 pb-6 text-center text-xs font-extrabold text-[#2D4A34] flex items-center justify-center pointer-events-none"
+        >
+          <span className="inline-flex items-center gap-1.5 bg-white/85 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-black/5 shadow-xs animate-bounce font-bold text-xs text-[#2D4A34]">
+            Scroll to hike the trail ↓
+          </span>
+        </div>
       </div>
 
       {/* Agency Impact Proof Bar (optional): Surfaces in Sky White #F5F3EF, Borders in Mountain #7C8A96 */}

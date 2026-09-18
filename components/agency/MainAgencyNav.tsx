@@ -15,13 +15,15 @@ import {
   Calendar,
   Sparkles,
   ArrowRight,
+  Compass,
 } from "lucide-react";
-import { useCurrency } from "./CurrencyContext";
-import { CURRENCY_RATES, DEMO_PACKAGES } from "@/lib/demo-agency-data";
+import { useSiteConfig } from "@/components/customizer/SiteConfigContext";
+import { SAMPLE_LOGOS } from "@/components/customizer/SampleLogos";
+import { DEMO_PACKAGES } from "@/lib/demo-agency-data";
 
 export function MainAgencyNav() {
   const pathname = usePathname();
-  const { currency, setCurrency } = useCurrency();
+  const { config } = useSiteConfig();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
@@ -72,6 +74,25 @@ export function MainAgencyNav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const renderLogoIcon = () => {
+    if (config.logoType === "custom" && config.customLogoDataUri) {
+      return (
+        <img
+          src={config.customLogoDataUri}
+          alt={config.agencyName}
+          className="size-8 object-contain rounded-lg"
+        />
+      );
+    }
+    if (config.logoType === "sample" && config.sampleLogoId) {
+      const sample = SAMPLE_LOGOS.find((l) => l.id === config.sampleLogoId);
+      if (sample) {
+        return sample.renderSvg("size-6 text-[#7FA05C]");
+      }
+    }
+    return <Mountain className="size-6 text-[#7FA05C]" />;
+  };
+
   const nepalPackages = DEMO_PACKAGES.filter((p) => p.destination === "Nepal");
   const headerBgClass = scrolled
     ? "bg-[#2D4A34]/95 backdrop-blur-md shadow-lg border-b border-[#7C8A96]/30 py-1 text-white"
@@ -98,15 +119,15 @@ export function MainAgencyNav() {
             href="/"
             className="flex items-center gap-3 group focus:outline-none"
           >
-            <div className="size-10 rounded-xl bg-white/10 backdrop-blur-xs text-white border border-white/25 flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform">
-              <Mountain className="size-6 text-[#7FA05C]" />
+            <div className="size-10 rounded-xl bg-white/10 backdrop-blur-xs text-white border border-white/25 flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform overflow-hidden p-1">
+              {renderLogoIcon()}
             </div>
             <div>
               <div className="font-heading font-extrabold text-lg text-white tracking-tight leading-none group-hover:text-[#D9A23B] transition-colors">
-                Zenith Himalaya
+                {config.agencyName}
               </div>
               <div className="text-[10px] tracking-wider uppercase font-bold text-[#7FA05C] mt-1">
-                Pioneering Sherpa Expeditions · Est. 2008
+                Pioneering Expeditions · Est. 2008
               </div>
             </div>
           </Link>
@@ -247,24 +268,24 @@ export function MainAgencyNav() {
 
           {/* Right Action & Controls */}
           <div className="flex items-center gap-2.5">
-            {/* Currency Switcher inside Main Nav */}
-            <div className="hidden sm:flex items-center bg-white/10 backdrop-blur-xs rounded-lg p-0.5 border border-white/15">
-              {(Object.keys(CURRENCY_RATES) as (keyof typeof CURRENCY_RATES)[]).map((curr) => (
-                <button
-                  key={curr}
-                  type="button"
-                  onClick={() => setCurrency(curr)}
-                  className={`px-2 py-1 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                    currency === curr
-                      ? "bg-[#7FA05C] text-white shadow-xs"
-                      : "text-white/75 hover:text-white"
-                  }`}
-                  title={CURRENCY_RATES[curr].name}
-                >
-                  {curr}
-                </button>
-              ))}
-            </div>
+            {/* AI Trip Planner Nav Pill */}
+            <Link
+              href="/trip-planner"
+              id="nav-ai-trip-planner"
+              className={`relative inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-300 shadow-sm border ${
+                pathname === "/trip-planner"
+                  ? "bg-gradient-to-r from-[#DD6B2E] via-[#D9A23B] to-[#7FA05C] text-white border-white/40 shadow-lg scale-105"
+                  : "bg-white/12 hover:bg-white/20 text-white border-white/20 hover:border-white/40 hover:scale-102"
+              }`}
+            >
+              <span className="flex items-center justify-center size-4 rounded-full bg-amber-400/25 text-amber-300 animate-pulse">
+                <Sparkles className="size-2.5" />
+              </span>
+              <span className="tracking-tight whitespace-nowrap">AI Trip Planner</span>
+              <span className="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-gradient-to-r from-amber-400 to-orange-500 text-stone-950 uppercase tracking-wider shadow-xs">
+                AI
+              </span>
+            </Link>
 
             {/* Book Trip Button */}
             <Link
@@ -297,6 +318,30 @@ export function MainAgencyNav() {
             onClick={() => setMobileMenuOpen(false)}
           >
             Home
+          </Link>
+
+          {/* Featured Mobile AI Trip Planner Link */}
+          <Link
+            href="/trip-planner"
+            className={`flex items-center justify-between p-3 rounded-xl border text-white font-bold text-xs transition-all shadow-md ${
+              pathname === "/trip-planner"
+                ? "bg-gradient-to-r from-[#DD6B2E] to-[#7FA05C] border-white/40"
+                : "bg-white/15 hover:bg-white/25 border-white/20"
+            }`}
+            onClick={() => setMobileMenuOpen(false)}
+          >
+            <div className="flex items-center gap-2.5">
+              <span className="flex items-center justify-center size-7 rounded-full bg-amber-400/25 text-amber-300">
+                <Sparkles className="size-4" />
+              </span>
+              <div className="text-left">
+                <div className="text-xs font-extrabold text-white">AI Custom Trip Planner</div>
+                <div className="text-[10px] text-white/75 font-normal">Interactive day-by-day itineraries</div>
+              </div>
+            </div>
+            <span className="px-2 py-0.5 rounded-full text-[9px] font-black bg-gradient-to-r from-amber-400 to-orange-500 text-stone-950 uppercase tracking-wider">
+              NEW AI
+            </span>
           </Link>
 
           <div className="text-xs font-extrabold uppercase tracking-wider text-[#7FA05C] pt-2">
@@ -358,39 +403,12 @@ export function MainAgencyNav() {
             >
               Contact Us
             </Link>
-            <Link
-              href="/demo/annapurna-treks"
-              className="block py-1 text-[#D9A23B]"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              ★ Agency Tech Studio Services
-            </Link>
           </div>
 
-          <div className="pt-3 border-t border-white/10 flex items-center justify-between">
-            <span className="text-[11px] font-bold text-[#F5F3EF]/75">Currency:</span>
-            <div className="flex items-center gap-1 bg-white/10 rounded-md p-0.5 border border-white/15">
-              {(Object.keys(CURRENCY_RATES) as (keyof typeof CURRENCY_RATES)[]).map((curr) => (
-                <button
-                  key={curr}
-                  type="button"
-                  onClick={() => setCurrency(curr)}
-                  className={`px-2 py-0.5 rounded text-[10px] font-bold transition-all cursor-pointer ${
-                    currency === curr
-                      ? "bg-[#7FA05C] text-white shadow-xs"
-                      : "text-white/70 hover:text-white"
-                  }`}
-                >
-                  {curr}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="pt-2">
+          <div className="pt-2 border-t border-white/10">
             <Link
               href="/booking"
-              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#7FA05C] text-white font-bold text-xs"
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#7FA05C] hover:bg-[#6E8C4E] text-white font-bold text-xs shadow-md transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               Book Trip Dates

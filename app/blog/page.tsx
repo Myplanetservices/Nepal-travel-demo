@@ -249,7 +249,7 @@ export default function BlogPage() {
                   </div>
 
                   <Link
-                    href={`/contact?inquiry=${encodeURIComponent(article.title)}`}
+                    href={`/blog/${article.slug}`}
                     className="inline-flex items-center gap-1 text-xs font-extrabold text-[#7FA05C] group-hover:text-[#2D4A34] transition-colors"
                   >
                     <span>Read Guide</span>

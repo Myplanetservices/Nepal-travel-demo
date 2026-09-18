@@ -33,7 +33,7 @@ import {
   AnimatedTravelIcon,
 } from "@/components/travel/TravelStickers";
 
-const REGIONS = ["All", "Everest", "Annapurna", "Manaslu", "Langtang", "Bhutan", "Tibet"];
+const REGIONS = ["All", "Everest", "Annapurna", "Manaslu", "Langtang", "Mustang", "Bhutan", "Tibet"];
 const DIFFICULTIES = ["All", "Moderate", "Challenging", "Strenuous"];
 
 function ToursContent() {

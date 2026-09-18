@@ -3,6 +3,9 @@ import { Manrope, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { SmoothScrollProvider } from "@/components/providers/SmoothScrollProvider";
 import { CurrencyProvider } from "@/components/agency/CurrencyContext";
+import { SiteConfigProvider } from "@/components/customizer/SiteConfigContext";
+import { CustomizerTrigger } from "@/components/customizer/CustomizerTrigger";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -25,32 +28,35 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://myplanetservices.com"),
+  metadataBase: new URL("https://zenithhimalaya.com"),
   title: "Zenith Himalaya | High Alpine Expeditions in Nepal, Bhutan & Tibet",
   description:
     "Authentic, Sherpa-led Himalayan treks and alpine expeditions across Nepal, Bhutan, and Tibet since 2008 with verified permits, UIAGM guides, and guaranteed departure dates.",
   keywords: [
-    "Nepal Travel Agency Website",
-    "Trekking Agency Web Design",
-    "Kathmandu Web Development",
-    "Pokhara Travel Agency Marketing",
-    "Trekking Booking Engine",
-    "3D Travel Website",
-    "My Planet Services",
+    "Nepal Trekking Expeditions",
+    "Everest Base Camp Trek",
+    "Annapurna Circuit",
+    "Manaslu Circuit Trek",
+    "Upper Mustang Trek",
+    "Langtang Valley Trek",
+    "Bhutan Cultural Tours",
+    "Tibet Overland Expeditions",
+    "Certified Sherpa Guides",
+    "Zenith Himalaya",
   ],
-  authors: [{ name: "My Planet Services", url: "https://myplanetservices.com" }],
+  authors: [{ name: "Zenith Himalaya Expeditions", url: "https://zenithhimalaya.com" }],
   openGraph: {
-    title: "My Planet Services — Turn Browsers Into Bookings",
+    title: "Zenith Himalaya | High Alpine Expeditions in Nepal, Bhutan & Tibet",
     description:
-      "Modern 3D websites designed specifically for Nepal travel agencies to capture international trekkers and eliminate OTA commissions.",
-    url: "https://myplanetservices.com",
-    siteName: "My Planet Services",
+      "Authentic, Sherpa-led Himalayan treks and alpine expeditions across Nepal, Bhutan, and Tibet since 2008 with verified permits, UIAGM guides, and guaranteed departure dates.",
+    url: "https://zenithhimalaya.com",
+    siteName: "Zenith Himalaya",
     images: [
       {
         url: "/assets/banner-1.png",
         width: 1200,
         height: 630,
-        alt: "My Planet Services Nepal Travel Platform",
+        alt: "Zenith Himalaya Alpine Expeditions",
       },
     ],
     locale: "en_US",
@@ -58,8 +64,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "My Planet Services — 3D Travel Agency Websites",
-    description: "Websites that turn browsers into direct bookings for Nepal travel & trekking agencies.",
+    title: "Zenith Himalaya | High Alpine Expeditions",
+    description: "Sherpa-led Himalayan treks and alpine expeditions across Nepal, Bhutan, and Tibet with guaranteed departures.",
     images: ["/assets/banner-1.png"],
   },
   icons: {
@@ -79,9 +85,13 @@ export default function RootLayout({
         <link rel="icon" href="/assets/logo.svg" type="image/svg+xml" />
       </head>
       <body className="antialiased min-h-[100dvh] flex flex-col bg-background text-foreground selection:bg-[#7FA05C]/30 selection:text-[#2D4A34]">
-        <CurrencyProvider>
-          <SmoothScrollProvider>{children}</SmoothScrollProvider>
-        </CurrencyProvider>
+        <SiteConfigProvider>
+          <CurrencyProvider>
+            <SmoothScrollProvider>{children}</SmoothScrollProvider>
+            <CustomizerTrigger />
+            <ChatWidget />
+          </CurrencyProvider>
+        </SiteConfigProvider>
       </body>
     </html>
   );

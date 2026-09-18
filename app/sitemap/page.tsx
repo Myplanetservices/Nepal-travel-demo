@@ -307,13 +307,6 @@ export default function SitemapPage() {
                 </Link>
                 <div className="text-[11px] text-[#7C8A96]">10% deposit terms, rescue insurance, porter welfare guarantee</div>
               </li>
-              <li>
-                <Link href="/demo/annapurna-treks" className="font-bold text-[#D9A23B] hover:underline flex items-center justify-between">
-                  <span>Agency Tech Services Demo</span>
-                  <Sparkles className="size-3.5 text-[#D9A23B]" />
-                </Link>
-                <div className="text-[11px] text-[#7C8A96]">3D portals & software engineering for adventure tour operators</div>
-              </li>
             </ul>
           </div>
         </div>

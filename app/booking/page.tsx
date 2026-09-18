@@ -85,6 +85,9 @@ function BookingContent() {
 
   const handleCompleteBooking = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!fullName.trim() || !email.trim() || !phone.trim()) {
+      return;
+    }
     setBookingSuccess(true);
   };
 
@@ -104,7 +107,7 @@ function BookingContent() {
         </h1>
 
         <p className="mt-3 text-xs sm:text-sm text-[#7C8A96] max-w-xl mx-auto leading-relaxed">
-          Reference Code: <strong className="text-[#2D4A34]">ZH-2026-{Math.floor(1000 + Math.random() * 9000)}</strong>. A confirmation voucher has been sent to <strong>{email || "your email address"}</strong>. Our Sherpa operations director will contact you via email or phone within 12 hours.
+          Reference Code: <strong className="text-[#2D4A34]">ZH-2026-{Math.floor(1000 + Math.random() * 9000)}</strong>. A confirmation voucher has been sent to <strong>{email}</strong>. Our Sherpa operations director will contact you via email or phone within 12 hours.
         </p>
 
         <div className="mt-8 bg-white p-6 rounded-2xl border border-[#7C8A96]/20 text-left text-xs max-w-lg mx-auto shadow-sm space-y-3">
@@ -125,7 +128,7 @@ function BookingContent() {
           </div>
           <div className="flex justify-between">
             <span className="text-[#7C8A96]">Lead Traveler:</span>
-            <span className="font-bold text-[#33322E]">{fullName || "Marcus Sterling"}</span>
+            <span className="font-bold text-[#33322E]">{fullName}</span>
           </div>
           <div className="pt-2 border-t border-[#7C8A96]/15 flex justify-between font-bold text-sm text-[#2D4A34]">
             <span>Amount Paid Now (10% Deposit):</span>
@@ -227,7 +230,7 @@ function BookingContent() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-          <div className="lg:col-span-2 space-y-8">
+          <form onSubmit={handleCompleteBooking} className="lg:col-span-2 space-y-8">
           <div className="bg-white p-6 sm:p-8 rounded-2xl border border-[#7C8A96]/20 shadow-xs">
             <div className="flex items-center gap-3 mb-5">
               <span className="size-7 rounded-full bg-[#2D4A34] text-white font-extrabold text-xs flex items-center justify-center">
@@ -323,7 +326,7 @@ function BookingContent() {
                   <input
                     type="text"
                     required
-                    placeholder="Marcus Sterling"
+                    placeholder="e.g. Eleanor Vance"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="w-full h-11 pl-9 pr-3 bg-[#F5F3EF] border border-[#7C8A96]/30 rounded-xl text-xs font-medium focus:outline-none focus:border-[#2D4A34]"
@@ -340,7 +343,7 @@ function BookingContent() {
                   <input
                     type="email"
                     required
-                    placeholder="marcus@example.com"
+                    placeholder="eleanor@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full h-11 pl-9 pr-3 bg-[#F5F3EF] border border-[#7C8A96]/30 rounded-xl text-xs font-medium focus:outline-none focus:border-[#2D4A34]"
@@ -504,7 +507,7 @@ function BookingContent() {
               </div>
             </div>
 
-            <form onSubmit={handleCompleteBooking}>
+            <div>
               <button
                 type="submit"
                 className="w-full py-4 rounded-xl bg-[#2D4A34] hover:bg-[#1F2E23] text-white font-extrabold text-sm shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
@@ -517,9 +520,9 @@ function BookingContent() {
                 <ShieldCheck className="size-3.5 text-[#7FA05C]" />
                 <span>Encrypted 256-bit SSL transaction. 100% Refundable if cancelled within 7 days.</span>
               </div>
-            </form>
+            </div>
           </div>
-        </div>
+        </form>
 
         <div className="lg:col-span-1">
           <div className="sticky top-[109px] space-y-6">

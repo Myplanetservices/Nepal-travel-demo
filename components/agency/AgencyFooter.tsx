@@ -17,10 +17,32 @@ import {
   Lock,
   Sparkles,
 } from "lucide-react";
+import { useSiteConfig } from "@/components/customizer/SiteConfigContext";
+import { SAMPLE_LOGOS } from "@/components/customizer/SampleLogos";
 
 export function AgencyFooter() {
+  const { config } = useSiteConfig();
   const [email, setEmail] = useState("");
   const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const renderLogoIcon = () => {
+    if (config.logoType === "custom" && config.customLogoDataUri) {
+      return (
+        <img
+          src={config.customLogoDataUri}
+          alt={config.agencyName}
+          className="size-7 object-contain rounded"
+        />
+      );
+    }
+    if (config.logoType === "sample" && config.sampleLogoId) {
+      const sample = SAMPLE_LOGOS.find((l) => l.id === config.sampleLogoId);
+      if (sample) {
+        return sample.renderSvg("size-4.5 text-[#7FA05C]");
+      }
+    }
+    return <Mountain className="size-4.5" />;
+  };
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,7 +118,7 @@ export function AgencyFooter() {
             {isSubscribed && (
               <div className="mt-1 text-[11px] font-semibold text-[#7FA05C] flex items-center justify-center lg:justify-start gap-1">
                 <CheckCircle2 className="size-3" />
-                <span>Subscribed to Zenith Himalaya dispatch!</span>
+                <span>Subscribed to {config.agencyName} dispatch!</span>
               </div>
             )}
           </div>
@@ -112,12 +134,12 @@ export function AgencyFooter() {
           <div className="lg:col-span-4 space-y-3.5">
             {/* Logo + Tagline */}
             <div className="flex items-center gap-3">
-              <div className="size-9 rounded-xl bg-[#1E3725] text-[#7FA05C] flex items-center justify-center font-bold text-base shadow-sm border border-[#7FA05C]/40 shrink-0">
-                <Mountain className="size-4.5" />
+              <div className="size-9 rounded-xl bg-[#1E3725] text-[#7FA05C] flex items-center justify-center font-bold text-base shadow-sm border border-[#7FA05C]/40 shrink-0 overflow-hidden p-0.5">
+                {renderLogoIcon()}
               </div>
               <div>
                 <div className="font-heading font-extrabold text-lg text-white tracking-tight leading-none">
-                  Zenith Himalaya
+                  {config.agencyName}
                 </div>
                 <div className="text-[10px] tracking-widest uppercase font-bold text-[#7FA05C] mt-0.5">
                   Sherpa Expeditions · Est. 2008
@@ -161,8 +183,8 @@ export function AgencyFooter() {
               <div className="flex items-center gap-2">
                 <Phone className="size-3.5 text-[#7FA05C] shrink-0" />
                 <span className="font-mono text-[11px] text-white">
-                  <a href="tel:+97714700000" className="hover:text-[#7FA05C] transition-colors">
-                    +977-1-4700000
+                  <a href="tel:+97714701234" className="hover:text-[#7FA05C] transition-colors">
+                    +977 1-4701234
                   </a>
                   {" · "}
                   <a href="tel:+9779801234567" className="hover:text-[#7FA05C] transition-colors">
@@ -184,7 +206,7 @@ export function AgencyFooter() {
             {/* Social & TripAdvisor Badges */}
             <div className="flex items-center gap-2 pt-1">
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/zenithhimalaya"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -195,7 +217,7 @@ export function AgencyFooter() {
                 </svg>
               </a>
               <a
-                href="https://youtube.com"
+                href="https://youtube.com/@zenithhimalaya"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="YouTube"
@@ -206,7 +228,7 @@ export function AgencyFooter() {
                 </svg>
               </a>
               <a
-                href="https://facebook.com"
+                href="https://facebook.com/zenithhimalaya"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Facebook"
@@ -458,7 +480,7 @@ export function AgencyFooter() {
         <div className="mt-8 pt-5 border-t border-[#1F3A27] flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[#F5F3EF]/65">
           {/* Left: Copyright */}
           <div className="text-center md:text-left text-[11px]">
-            © {new Date().getFullYear()} Zenith Himalaya Expeditions. All rights reserved.
+            © {new Date().getFullYear()} {config.agencyName} Expeditions. All rights reserved.
           </div>
 
           {/* Center: Agency Tech Services Pill */}

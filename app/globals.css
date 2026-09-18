@@ -20,29 +20,33 @@
   --heading: #2D4A34;
   --cta-foreground: #FFFFFF;
   --radius: 0.75rem;
+
+  /* Theme Tokens for Widgets & Controls */
+  --color-primary: var(--pine);
+  --color-accent: var(--meadow);
 }
 
 @theme {
-  --color-background: #F5F3EF;
-  --color-pine: #2D4A34;
-  --color-meadow: #7FA05C;
+  --color-background: var(--color-bg, #F5F3EF);
+  --color-pine: var(--color-primary, #2D4A34);
+  --color-meadow: var(--color-accent, #7FA05C);
   --color-water: #3E7C94;
-  --color-mountain: #7C8A96;
+  --color-mountain: var(--color-text-muted, #7C8A96);
   --color-earth: #8B5A2B;
-  --color-cta: #DD6B2E;
+  --color-cta: var(--color-cta, #DD6B2E);
   --color-accent-gold: #D9A23B;
-  --color-text: #33322E;
+  --color-text: var(--color-text-primary, #33322E);
   --color-stone: #CBD5E1;
   --color-stone-400: #D6D3D1;
 
-  --color-surface: var(--surface);
+  --color-surface: var(--color-surface, #FFFFFF);
   --color-surface-alt: var(--surface-alt);
-  --color-foreground: var(--foreground);
-  --color-heading: var(--heading);
+  --color-foreground: var(--color-text-primary, #33322E);
+  --color-heading: var(--color-primary, #2D4A34);
   --color-cta-foreground: var(--cta-foreground);
 
-  --font-heading: var(--font-manrope), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-body: var(--font-dm-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: var(--font-heading-override, var(--font-manrope)), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-body: var(--font-body-override, var(--font-dm-sans)), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --shadow-card: 0 10px 28px rgba(45, 74, 52, 0.06);
   --shadow-elevated: 0 18px 44px rgba(45, 74, 52, 0.12);
 }
@@ -66,10 +70,104 @@
   color: rgba(255, 255, 255, 0.82) !important;
 }
 
+/* =========================================================================
+   DYNAMIC WHITE-LABEL PALETTE BINDINGS
+   Transforms all hardcoded and tokenized colors across the entire website
+   when a visitor selects a theme palette.
+   ========================================================================= */
+
+/* Primary brand color (#2D4A34) -> --color-primary */
+.bg-\[\#2D4A34\],
+.bg-pine {
+  background-color: var(--color-primary, #2D4A34) !important;
+}
+
+.text-\[\#2D4A34\],
+.text-pine {
+  color: var(--color-primary, #2D4A34) !important;
+}
+
+.border-\[\#2D4A34\],
+.border-pine {
+  border-color: var(--color-primary, #2D4A34) !important;
+}
+
+.ring-\[\#2D4A34\],
+.ring-pine {
+  --tw-ring-color: var(--color-primary, #2D4A34) !important;
+}
+
+.hover\:bg-\[\#2D4A34\]:hover {
+  background-color: var(--color-primary, #2D4A34) !important;
+}
+
+.hover\:text-\[\#2D4A34\]:hover {
+  color: var(--color-primary, #2D4A34) !important;
+}
+
+.hover\:border-\[\#2D4A34\]:hover {
+  border-color: var(--color-primary, #2D4A34) !important;
+}
+
+/* Secondary brand color (#1B2F22 / #1F2E23 / #1E3725) -> --color-secondary */
+.bg-\[\#1B2F22\],
+.bg-\[\#1F2E23\],
+.bg-\[\#1E3725\] {
+  background-color: var(--color-secondary, #1B2F22) !important;
+}
+
+/* Meadow / Accent color (#7FA05C) -> --color-accent */
+.bg-\[\#7FA05C\],
+.bg-meadow {
+  background-color: var(--color-accent, #7FA05C) !important;
+}
+
+.text-\[\#7FA05C\],
+.text-meadow {
+  color: var(--color-accent, #7FA05C) !important;
+}
+
+.border-\[\#7FA05C\],
+.border-meadow {
+  border-color: var(--color-accent, #7FA05C) !important;
+}
+
+.ring-\[\#7FA05C\],
+.ring-meadow {
+  --tw-ring-color: var(--color-accent, #7FA05C) !important;
+}
+
+.hover\:bg-\[\#7FA05C\]:hover {
+  background-color: var(--color-accent, #7FA05C) !important;
+}
+
+.hover\:text-\[\#7FA05C\]:hover {
+  color: var(--color-accent, #7FA05C) !important;
+}
+
+/* Call to action color (#DD6B2E / #EA580C) -> --color-cta */
+.bg-\[\#DD6B2E\],
+.bg-cta {
+  background-color: var(--color-cta, #DD6B2E) !important;
+}
+
+.text-\[\#DD6B2E\] {
+  color: var(--color-cta, #DD6B2E) !important;
+}
+
+.border-\[\#DD6B2E\] {
+  border-color: var(--color-cta, #DD6B2E) !important;
+}
+
+.hover\:bg-\[\#DD6B2E\]:hover {
+  background-color: var(--color-cta, #DD6B2E) !important;
+}
+
+/* Surface backgrounds and text copy */
 body {
-  background-color: #F5F3EF;
-  color: #33322E;
-  font-family: var(--font-dm-sans), system-ui, -apple-system, sans-serif;
+  background-color: var(--color-bg, #F5F3EF) !important;
+  color: var(--color-text-primary, #33322E) !important;
+  font-family: var(--font-body-override, var(--font-dm-sans)), system-ui, -apple-system, sans-serif !important;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -78,11 +176,77 @@ body {
 
 @layer base {
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-manrope), system-ui, -apple-system, sans-serif;
-    color: #2D4A34;
+    font-family: var(--font-heading-override, var(--font-manrope)), system-ui, -apple-system, sans-serif !important;
+    color: var(--color-primary, #2D4A34);
     letter-spacing: -0.025em;
     text-wrap: balance;
   }
+}
+
+/* Ensure headings with text-white or within white text containers remain pure bright white */
+.text-white,
+.text-white h1,
+.text-white h2,
+.text-white h3,
+.text-white h4,
+.text-white h5,
+.text-white h6,
+h1.text-white,
+h2.text-white,
+h3.text-white,
+h1.\!text-white,
+h2.\!text-white,
+h3.\!text-white {
+  color: #FFFFFF !important;
+}
+
+/* Trip Planner Dynamic Theme Banner */
+.trip-planner-banner {
+  background: linear-gradient(135deg, var(--color-primary, #2D4A34) 0%, var(--color-secondary, #1B2F22) 100%) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="dark"] .trip-planner-banner,
+.dark .trip-planner-banner {
+  background: linear-gradient(135deg, #0B1120 0%, #1E293B 100%) !important;
+  border-color: rgba(56, 189, 248, 0.3) !important;
+}
+
+/* Dark mode theme support for midnight-voyage */
+[data-theme="dark"],
+.dark {
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body,
+.dark body {
+  background-color: #0B1120 !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] .bg-white,
+.dark .bg-white,
+[data-theme="dark"] [class*="bg-[#F5F3EF]"],
+.dark [class*="bg-[#F5F3EF]"] {
+  background-color: #1E293B !important;
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] [class*="text-[#33322E]"],
+.dark [class*="text-[#33322E]"] {
+  color: #F8FAFC !important;
+}
+
+[data-theme="dark"] [class*="text-[#7C8A96]"],
+.dark [class*="text-[#7C8A96]"] {
+  color: #94A3B8 !important;
+}
+
+[data-theme="dark"] [class*="border-[#E2DFD8]"],
+.dark [class*="border-[#E2DFD8]"],
+[data-theme="dark"] [class*="border-[#7C8A96]"],
+.dark [class*="border-[#7C8A96]"] {
+  border-color: #334155 !important;
 }
 
 /* Lenis smooth scrolling rules */

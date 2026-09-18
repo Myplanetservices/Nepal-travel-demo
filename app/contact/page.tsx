@@ -51,7 +51,7 @@ export default function ContactPage() {
         {/* Background Hero Image with Atmospheric Overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1920&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1920&auto=format&fit=crop"
             alt="Kathmandu Valley and Himalayan Mountain Peaks"
             fill
             priority
@@ -108,7 +108,9 @@ export default function ContactPage() {
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="size-3.5 text-[#7FA05C]" />
-                  <span>inquiry@zenithhimalaya.example</span>
+                  <a href="mailto:contact@zenithhimalaya.com" className="hover:text-[#7FA05C] transition-colors">
+                    contact@zenithhimalaya.com
+                  </a>
                 </div>
               </div>
             </div>
@@ -146,10 +148,10 @@ export default function ContactPage() {
                 Connect directly with Senior Trek Director Dawa Sherpa for immediate itinerary customization.
               </p>
               <a
-                href="tel:+9779800000000"
+                href="tel:+9779801234567"
                 className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#7FA05C] hover:bg-[#6E8C4E] text-white font-bold text-xs transition-colors shadow-xs"
               >
-                <span>Call +977-9800000000</span>
+                <span>Call +977 980-1234567</span>
               </a>
             </div>
 

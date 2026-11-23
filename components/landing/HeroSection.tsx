@@ -227,7 +227,7 @@ export function HeroSection({
         {/* Hero Expedition Narrative Content */}
         <div
           ref={heroContentRef}
-          className="relative z-10 max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 pt-24 sm:pt-28 md:pt-32 text-center pointer-events-auto flex flex-col items-center justify-start select-none"
+          className="relative z-10 max-w-2xl lg:max-w-3xl mx-auto px-4 sm:px-6 pt-32 sm:pt-36 md:pt-40 text-center pointer-events-auto flex flex-col items-center justify-start select-none"
         >
           {/* Eyebrow Badge */}
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 shadow-md text-xs font-bold text-white mb-3 animate-in fade-in duration-300">

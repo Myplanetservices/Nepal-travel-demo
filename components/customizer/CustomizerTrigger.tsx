@@ -9,7 +9,7 @@ export function CustomizerTrigger() {
   const { isCustomizerOpen, setIsCustomizerOpen } = useSiteConfig();
   const [showTooltip, setShowTooltip] = useState(false);
 
-  // Implement scroll-depth (15-20%) + dwell-time (3-4 seconds) auto-trigger
+  // Implement polite delay (10 seconds) + scroll engagement auto-trigger
   useEffect(() => {
     // Check if user has already seen or interacted with prompt in this session
     const hasSeenPrompt = sessionStorage.getItem("hasSeenCustomizerPrompt");
@@ -31,20 +31,19 @@ export function CustomizerTrigger() {
       }
     };
 
-    // 1. Dwell timer: 3.5 seconds
+    // 1. Dwell timer: 10 seconds (gives user comfortable time to read and explore first)
     timerId = setTimeout(() => {
       timeSatisfied = true;
       checkBothSatisfied();
-    }, 3500);
+    }, 10000);
 
-    // 2. Scroll depth: 15-20% of page
+    // 2. Scroll depth: requires genuine scroll engagement (past 35% viewport or 20% page)
     const handleScroll = () => {
       const scrollPosition = window.scrollY || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const docHeight = document.documentElement.scrollHeight - windowHeight;
 
-      // Check if user has scrolled past 15% of viewport height or 10% of total page
-      if (scrollPosition > windowHeight * 0.18 || (docHeight > 0 && scrollPosition / docHeight > 0.12)) {
+      if (scrollPosition > windowHeight * 0.35 || (docHeight > 0 && scrollPosition / docHeight > 0.2)) {
         scrollSatisfied = true;
         checkBothSatisfied();
         window.removeEventListener("scroll", handleScroll);
@@ -76,7 +75,10 @@ export function CustomizerTrigger() {
 
         <button
           type="button"
-          onClick={() => setIsCustomizerOpen(!isCustomizerOpen)}
+          onClick={() => {
+            sessionStorage.setItem("hasSeenCustomizerPrompt", "true");
+            setIsCustomizerOpen(!isCustomizerOpen);
+          }}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
           onFocus={() => setShowTooltip(true)}

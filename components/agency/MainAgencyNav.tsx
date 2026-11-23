@@ -60,12 +60,18 @@ export function MainAgencyNav() {
       const currentProgress = totalScroll > 0 ? (window.scrollY / totalScroll) * 100 : 0;
       setScrollProgress(Math.min(100, Math.max(0, currentProgress)));
 
+      // At the top of page, header should stay transparent/unscrolled
+      if (window.scrollY <= 15) {
+        setScrolled(false);
+        return;
+      }
+
       const heroEl = document.getElementById("hero-section");
-      if (heroEl) {
+      if (heroEl && heroEl.offsetHeight > 0) {
         const rect = heroEl.getBoundingClientRect();
-        setScrolled(rect.bottom <= 80);
+        setScrolled(rect.bottom <= 80 || window.scrollY > 120);
       } else {
-        setScrolled(window.scrollY > 80);
+        setScrolled(window.scrollY > 60);
       }
     };
 
@@ -96,15 +102,15 @@ export function MainAgencyNav() {
   const nepalPackages = DEMO_PACKAGES.filter((p) => p.destination === "Nepal");
   const headerBgClass = scrolled
     ? "bg-[#2D4A34]/95 backdrop-blur-md shadow-lg border-b border-[#7C8A96]/30 py-1 text-white"
-    : "bg-gradient-to-b from-black/70 via-black/35 to-transparent border-b border-transparent py-1.5 text-white";
+    : "bg-gradient-to-b from-black/75 via-black/35 to-transparent border-b border-transparent py-1.5 text-white";
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${headerBgClass}`}
+      className={`fixed top-0 left-0 right-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${headerBgClass}`}
     >
       {/* Scroll Progress Indicator Line */}
       <div
-        className="absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-[#3E7C94] via-[#7FA05C] to-[#D9A23B] transition-all duration-75 ease-out"
+        className="absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-[#3E7C94] via-[#7FA05C] to-[#D9A23B] transition-all duration-75 ease-out pointer-events-none"
         style={{ width: `${scrollProgress}%` }}
         role="progressbar"
         aria-valuenow={Math.round(scrollProgress)}
@@ -112,21 +118,21 @@ export function MainAgencyNav() {
         aria-valuemax={100}
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-        <div className="flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-2.5 sm:py-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo & Brand */}
           <Link
             href="/"
-            className="flex items-center gap-3 group focus:outline-none"
+            className="flex items-center gap-2 sm:gap-3 group focus:outline-none shrink-0 min-w-0"
           >
-            <div className="size-10 rounded-xl bg-white/10 backdrop-blur-xs text-white border border-white/25 flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform overflow-hidden p-1">
+            <div className="size-9 sm:size-10 rounded-xl bg-white/10 backdrop-blur-xs text-white border border-white/25 flex items-center justify-center font-extrabold text-xl shadow-md group-hover:scale-105 transition-transform overflow-hidden p-1 shrink-0">
               {renderLogoIcon()}
             </div>
-            <div>
-              <div className="font-heading font-extrabold text-lg text-white tracking-tight leading-none group-hover:text-[#D9A23B] transition-colors">
+            <div className="min-w-0">
+              <div className="font-heading font-extrabold text-sm sm:text-base md:text-lg text-white tracking-tight leading-none group-hover:text-[#D9A23B] transition-colors truncate">
                 {config.agencyName}
               </div>
-              <div className="text-[10px] tracking-wider uppercase font-bold text-[#7FA05C] mt-1">
+              <div className="hidden xs:block text-[9px] sm:text-[10px] tracking-wider uppercase font-bold text-[#7FA05C] mt-0.5 sm:mt-1 whitespace-nowrap">
                 Pioneering Expeditions · Est. 2008
               </div>
             </div>
@@ -267,12 +273,13 @@ export function MainAgencyNav() {
           </nav>
 
           {/* Right Action & Controls */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {/* AI Trip Planner Nav Pill */}
             <Link
               href="/trip-planner"
               id="nav-ai-trip-planner"
-              className={`relative inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-300 shadow-sm border ${
+              aria-label="AI Trip Planner"
+              className={`relative inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all duration-300 shadow-sm border shrink-0 ${
                 pathname === "/trip-planner"
                   ? "bg-gradient-to-r from-[#DD6B2E] via-[#D9A23B] to-[#7FA05C] text-white border-white/40 shadow-lg scale-105"
                   : "bg-white/12 hover:bg-white/20 text-white border-white/20 hover:border-white/40 hover:scale-102"
@@ -281,7 +288,7 @@ export function MainAgencyNav() {
               <span className="flex items-center justify-center size-4 rounded-full bg-amber-400/25 text-amber-300 animate-pulse">
                 <Sparkles className="size-2.5" />
               </span>
-              <span className="tracking-tight whitespace-nowrap">AI Trip Planner</span>
+              <span className="tracking-tight whitespace-nowrap hidden sm:inline">AI Trip Planner</span>
               <span className="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-gradient-to-r from-amber-400 to-orange-500 text-stone-950 uppercase tracking-wider shadow-xs">
                 AI
               </span>
@@ -290,20 +297,21 @@ export function MainAgencyNav() {
             {/* Book Trip Button */}
             <Link
               href="/booking"
-              className="px-4 py-2 rounded-xl bg-[#7FA05C] hover:bg-[#6E8C4E] text-white font-extrabold text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5"
+              className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl bg-[#7FA05C] hover:bg-[#6E8C4E] text-white font-extrabold text-xs shadow-md transition-all active:scale-95 cursor-pointer flex items-center gap-1.5 shrink-0 whitespace-nowrap"
             >
               <Calendar className="size-3.5" />
-              <span>Book Trip</span>
+              <span>Book<span className="hidden sm:inline"> Trip</span></span>
             </Link>
 
-            {/* Mobile Drawer Trigger */}
+            {/* Mobile Drawer Trigger (Always visible on mobile/tablet) */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg text-white hover:bg-white/10 transition-colors"
-              aria-label="Toggle Navigation"
+              className="lg:hidden p-2 rounded-xl text-white bg-white/10 hover:bg-white/20 border border-white/20 transition-all flex items-center justify-center shrink-0 ml-0.5"
+              aria-label="Toggle Navigation Menu"
+              aria-expanded={mobileMenuOpen}
             >
-              {mobileMenuOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+              {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
           </div>
         </div>
@@ -311,7 +319,7 @@ export function MainAgencyNav() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#2D4A34] text-white border-t border-white/15 px-4 pt-3 pb-6 space-y-3 shadow-xl">
+        <div className="lg:hidden bg-[#2D4A34] text-white border-t border-white/15 px-4 pt-3 pb-8 space-y-3 shadow-2xl max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain">
           <Link
             href="/"
             className="block py-2 text-sm font-bold border-b border-white/10"

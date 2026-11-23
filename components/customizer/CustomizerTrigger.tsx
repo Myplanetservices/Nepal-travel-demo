@@ -10,7 +10,7 @@ export function CustomizerTrigger() {
   const [showTooltip, setShowTooltip] = useState(false);
   const autoTriggeredRef = useRef(false);
 
-  // Reliable auto-open after 5 seconds on page load
+  // Reliable auto-open after 7.5 seconds on page load
   useEffect(() => {
     // If already open or already triggered in this page load, don't trigger again
     if (autoTriggeredRef.current || isCustomizerOpen) {
@@ -22,7 +22,7 @@ export function CustomizerTrigger() {
         autoTriggeredRef.current = true;
         setIsCustomizerOpen(true);
       }
-    }, 5000);
+    }, 7500);
 
     return () => {
       clearTimeout(timerId);

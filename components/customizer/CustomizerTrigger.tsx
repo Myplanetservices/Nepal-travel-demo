@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Palette } from "lucide-react";
 import { useSiteConfig } from "./SiteConfigContext";
 import { CustomizerModal } from "./CustomizerModal";
@@ -8,55 +8,26 @@ import { CustomizerModal } from "./CustomizerModal";
 export function CustomizerTrigger() {
   const { isCustomizerOpen, setIsCustomizerOpen } = useSiteConfig();
   const [showTooltip, setShowTooltip] = useState(false);
+  const autoTriggeredRef = useRef(false);
 
-  // Implement polite delay (10 seconds) + scroll engagement auto-trigger
+  // Reliable auto-open after 5 seconds on page load
   useEffect(() => {
-    // Check if user has already seen or interacted with prompt in this session
-    const hasSeenPrompt = sessionStorage.getItem("hasSeenCustomizerPrompt");
-    const hasExistingConfig = localStorage.getItem("siteConfig");
-
-    // If already triggered or already customized, don't auto-open
-    if (hasSeenPrompt || hasExistingConfig) {
+    // If already open or already triggered in this page load, don't trigger again
+    if (autoTriggeredRef.current || isCustomizerOpen) {
       return;
     }
 
-    let scrollSatisfied = false;
-    let timeSatisfied = false;
-    let timerId: NodeJS.Timeout | null = null;
-
-    const checkBothSatisfied = () => {
-      if (scrollSatisfied && timeSatisfied) {
-        sessionStorage.setItem("hasSeenCustomizerPrompt", "true");
+    const timerId = setTimeout(() => {
+      if (!autoTriggeredRef.current) {
+        autoTriggeredRef.current = true;
         setIsCustomizerOpen(true);
       }
-    };
-
-    // 1. Dwell timer: 10 seconds (gives user comfortable time to read and explore first)
-    timerId = setTimeout(() => {
-      timeSatisfied = true;
-      checkBothSatisfied();
-    }, 10000);
-
-    // 2. Scroll depth: requires genuine scroll engagement (past 35% viewport or 20% page)
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY || document.documentElement.scrollTop;
-      const windowHeight = window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight - windowHeight;
-
-      if (scrollPosition > windowHeight * 0.35 || (docHeight > 0 && scrollPosition / docHeight > 0.2)) {
-        scrollSatisfied = true;
-        checkBothSatisfied();
-        window.removeEventListener("scroll", handleScroll);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    }, 5000);
 
     return () => {
-      if (timerId) clearTimeout(timerId);
-      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timerId);
     };
-  }, [setIsCustomizerOpen]);
+  }, [isCustomizerOpen, setIsCustomizerOpen]);
 
   return (
     <>
@@ -76,7 +47,7 @@ export function CustomizerTrigger() {
         <button
           type="button"
           onClick={() => {
-            sessionStorage.setItem("hasSeenCustomizerPrompt", "true");
+            autoTriggeredRef.current = true;
             setIsCustomizerOpen(!isCustomizerOpen);
           }}
           onMouseEnter={() => setShowTooltip(true)}
